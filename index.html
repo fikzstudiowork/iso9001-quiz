@@ -238,6 +238,12 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 @media(max-width:360px){.scr{padding:16px 13px 28px}.btn-row{grid-template-columns:1fr}.bk-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:480px){.app{border-left:1px solid var(--rim);border-right:1px solid var(--rim)}}
+.dev-credit{text-align:center;padding:8px 18px 14px;font-size:10px;color:var(--text3);position:relative;z-index:2;letter-spacing:.3px}
+.dev-credit a{color:var(--text3);text-decoration:none;border-bottom:1px solid var(--text3)}
+.coming-soon-box{background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:var(--r);padding:18px 16px;text-align:center;margin-bottom:14px;border:1px solid rgba(27,79,216,.25)}
+.coming-soon-box .cs-badge{display:inline-block;font-family:"Syne",sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#FFB020;background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.35);border-radius:99px;padding:6px 14px;margin-bottom:10px}
+.coming-soon-box p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.55}
+.splash-locked{opacity:.45;pointer-events:none;user-select:none;filter:grayscale(.15)}
 </style>
 </head>
 <body>
@@ -256,13 +262,18 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
 
   <!-- SPLASH -->
   <div class="scr on" id="s-splash">
+    <div id="coming-soon-banner" class="coming-soon-box" style="display:none">
+      <div class="cs-badge">Coming Soon</div>
+      <p>The quiz arena is not open yet. Please check back later.<br>Trainers can still access the dashboard below.</p>
+    </div>
+    <div id="splash-play" class="splash-play">
     <div class="splash-hero">
       <div class="emblem">🏆</div>
       <div class="kicker">Quality Management · Live Quiz</div>
       <div class="splash-title">Quiz<br><em>Arena</em></div>
       <div class="splash-sub">Real-time multiplayer · Randomised questions · 3 difficulty levels · Shareable certificate</div>
       <div class="pills">
-        <div class="pill">🔀 Randomised</div><div class="pill">⏱ 30s timer</div>
+        <div class="pill">🔀 Randomised</div><div class="pill">⏱ 60s timer</div>
         <div class="pill">📊 Live board</div><div class="pill">🎓 Certificate</div>
       </div>
     </div>
@@ -273,7 +284,8 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
       <div class="lvl-card lv2" onclick="selLevel(2,this)"><span class="li">⚡</span><span class="ln">Practitioner</span><span class="ls">Clauses &amp; implementation</span></div>
       <div class="lvl-card lv3" onclick="selLevel(3,this)"><span class="li">🎯</span><span class="ln">Professional</span><span class="ls">Case studies &amp; audit logic</span></div>
     </div>
-    <button class="btn btn-blue" onclick="joinGame()">Enter the arena →</button>
+    <button class="btn btn-blue" id="btn-join" onclick="joinGame()">Enter the arena →</button>
+    </div>
     <div class="adm-lnk"><a href="#" onclick="showAdminLogin();return false">Trainer / admin →</a></div>
   </div>
 
@@ -348,6 +360,8 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
     <div id="a-history"><div class="empty"><span>📁</span>No archived sessions yet</div></div>
     <div class="divider"></div>
     <button class="ex-btn" onclick="exportCSV()">📊 Export current session (CSV)</button>
+    <button class="ex-btn" onclick="window.open('questions-discussion.html','_blank')">📖 Open question bank (discussion)</button>
+    <button class="ex-btn" onclick="exportQuestionsDoc()">📄 Download question bank (HTML → Word)</button>
     <button class="ex-btn" onclick="exportHTML()">📋 Export leaderboard (printable)</button>
     <button class="btn btn-ghost" style="color:var(--red);border-color:rgba(220,38,38,.2)" onclick="resetGame()">🗑 Reset session</button>
     <button class="btn btn-ghost" onclick="show('s-splash')">← Home</button>
@@ -372,7 +386,7 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
           <circle class="ring-track" cx="40" cy="40" r="35"/>
           <circle class="ring-prog" id="ring" cx="40" cy="40" r="35"/>
         </svg>
-        <div class="timer-num" id="timer-num">30</div>
+        <div class="timer-num" id="timer-num">60</div>
         <div class="mario-sprite" id="mario-sprite">⭐</div>
       </div>
     </div>
@@ -417,6 +431,7 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
     <div id="review-list"></div>
     <button class="btn btn-ghost" onclick="show('s-result')">← Back to results</button>
   </div>
+  <div class="dev-credit">Developed by <a href="https://github.com/fikzstudiowork" target="_blank" rel="noopener">Fikz Dev</a></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"></script>
@@ -424,6 +439,10 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
 <script>
 const FB={apiKey:"AIzaSyBgXoFIYtKwbWTDzO16Ngz2PSAYmGN4esg",authDomain:"is09001-quiz-yhy.firebaseapp.com",databaseURL:"https://is09001-quiz-yhy-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"is09001-quiz-yhy",storageBucket:"is09001-quiz-yhy.firebasestorage.app",messagingSenderId:"990497673756",appId:"1:990497673756:web:049e4543bb3c2d979685d9"};
 const ADMIN_PIN="9001";
+const COMING_SOON=true;
+const TIMER_SEC=60;
+const HURRY_AT=12;
+const RING_LEN=219.9;
 const SESS=["Session 1","Session 2","Session 3","Session 4","Session 5"];
 const AVATS=["🧑","👩","👨","🧑‍💼","👩‍💼","👨‍💼","🧑‍🔬","👩‍🔬","🦸","🦸‍♀️","🎯","⚡","🦊","🐯","🦁","🐼","🦅","🌟"];
 
@@ -493,7 +512,7 @@ const L3=[
 
 let db=null,pRef=null,psRef=null,gRef=null,hRef=null;
 const LS_KEY="yhy_quiz_player";
-let G={name:"",uid:"",avatar:"",level:1,sessionId:"",joined:0,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:30,sesC:{},sesT:{},answers:[],isAdmin:false,fbOk:false,questions:[],muted:false,hurryOn:false,hurryIv:null,_waitG:null,_waitP:null};
+let G={name:"",uid:"",avatar:"",level:1,sessionId:"",joined:0,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:TIMER_SEC,sesC:{},sesT:{},answers:[],isAdmin:false,fbOk:false,questions:[],muted:false,hurryOn:false,hurryIv:null,_waitG:null,_waitP:null};
 let _ac=null,_hurryLast=0;
 
 function ac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
@@ -541,8 +560,20 @@ function buildQ(level){
   const pool=shuffle(bank).slice(0,20);
   return pool.map(q=>{const opts=[...q.o];const correct=opts[q.a];const sh=shuffle(opts);return{...q,o:sh,a:sh.indexOf(correct)};});
 }
-function selLevel(n,el){G.level=n;document.querySelectorAll(".lvl-card").forEach(c=>c.classList.remove("active"));el.classList.add("active")}
-function checkUrlAdmin(){const p=new URLSearchParams(window.location.search);if(p.get("trainer")===ADMIN_PIN){G.isAdmin=true;initFB();ensureGame(()=>showAdmin());return true}return false}
+function playerBlocked(){return COMING_SOON&&!G.isAdmin}
+function applyComingSoon(){
+  const on=playerBlocked();
+  document.getElementById("coming-soon-banner").style.display=on?"block":"none";
+  document.getElementById("splash-play").classList.toggle("splash-locked",on);
+  const btn=document.getElementById("btn-join");
+  if(on){btn.textContent="Coming soon";btn.disabled=true;btn.style.opacity=".6";btn.style.cursor="not-allowed"}
+  else{btn.textContent="Enter the arena →";btn.disabled=false;btn.style.opacity="";btn.style.cursor=""}
+}
+
+function exportQuestionsDoc(){window.open("questions-discussion.html","_blank");toast("📖 Question bank opened — use Word or Print")}
+
+function selLevel(n,el){if(playerBlocked()){toast("Coming soon — not open yet");return}G.level=n;document.querySelectorAll(".lvl-card").forEach(c=>c.classList.remove("active"));el.classList.add("active")}
+function checkUrlAdmin(){const p=new URLSearchParams(window.location.search);if(p.get("trainer")===ADMIN_PIN){G.isAdmin=true;initFB();applyComingSoon();ensureGame(()=>showAdmin());return true}return false}
 function show(id){document.querySelectorAll(".scr").forEach(s=>s.classList.remove("on"));document.getElementById(id).classList.add("on");window.scrollTo(0,0)}
 
 function applyPlayer(p,uid){
@@ -581,6 +612,7 @@ function showSessionEnded(msg){
 
 function tryReconnect(){
   initFB();if(!G.fbOk)return;
+  if(playerBlocked()){applyComingSoon();return}
   const local=loadLocal();if(!local||!local.uid)return;
   psRef.child(local.uid).once("value",snap=>{
     const p=snap.val();if(!p){clearLocal();return}
@@ -601,6 +633,7 @@ function tryReconnect(){
 }
 
 function joinGame(){
+  if(playerBlocked()){toast("Coming soon — quiz not open yet");return}
   const name=document.getElementById("inp-name").value.trim();
   if(!name){document.getElementById("inp-name").focus();return}
   ac();sndJoin();initFB();
@@ -660,7 +693,7 @@ function runCountdownThenStart(countdownEnd){
 function showAdminLogin(){show("s-admin-login")}
 function checkPin(){
   const p=document.getElementById("inp-pin").value.trim();
-  if(p===ADMIN_PIN){G.isAdmin=true;initFB();ensureGame(()=>showAdmin())}
+  if(p===ADMIN_PIN){G.isAdmin=true;initFB();applyComingSoon();ensureGame(()=>showAdmin())}
   else{document.getElementById("inp-pin").value="";document.getElementById("inp-pin").placeholder="Wrong PIN…";sndWrong();setTimeout(()=>{document.getElementById("inp-pin").placeholder="••••"},2000)}
 }
 
@@ -805,24 +838,24 @@ function renderQ(){
   document.getElementById("fb").className="fb";document.getElementById("nxt-w").className="nxt-w";
   document.getElementById("btn-nxt").textContent=G.cur+1<20?"Next question →":"See results →";
   document.getElementById("lb-sect").style.display="none";
-  setMarioHurry(false);setRing(30,false);startTmr();
+  setMarioHurry(false);setRing(TIMER_SEC,false);startTmr();
 }
 
 function startTmr(){
-  G.timeLeft=30;clearInterval(G.tmr);
+  G.timeLeft=TIMER_SEC;clearInterval(G.tmr);
   G.tmr=setInterval(()=>{
     G.timeLeft--;
-    const urgent=G.timeLeft<=8;
+    const urgent=G.timeLeft<=HURRY_AT;
     setRing(G.timeLeft,urgent);
     document.getElementById("timer-num").textContent=G.timeLeft;
-    if(urgent){setMarioHurry(true);if(G.timeLeft<=5&&G.timeLeft>0&&!G.muted)sndTick()}
-    else if(G.timeLeft<=5&&G.timeLeft>0)sndTick();
+    if(urgent){setMarioHurry(true);if(G.timeLeft<=8&&G.timeLeft>0&&!G.muted)sndTick()}
+    else if(G.timeLeft<=8&&G.timeLeft>0)sndTick();
     if(G.timeLeft<=0){clearInterval(G.tmr);setMarioHurry(false);autoEnd()}
   },1000);
 }
 
 function setRing(t,urgent){
-  const r=document.getElementById("ring");r.style.strokeDashoffset=219.9-(t/30)*219.9;r.className="ring-prog"+(urgent?" urgent":"");
+  const r=document.getElementById("ring");r.style.strokeDashoffset=RING_LEN-(t/TIMER_SEC)*RING_LEN;r.className="ring-prog"+(urgent?" urgent":"");
   const n=document.getElementById("timer-num");n.className="timer-num"+(urgent?" urgent mario-hurry":"");
 }
 
@@ -846,7 +879,7 @@ function pick(i){
   btns.forEach(b=>b.disabled=true);
   if(i===q.a){
     btns[i].classList.add("correct");
-    const tb=Math.round((G.timeLeft/30)*50);
+    const tb=Math.round((G.timeLeft/TIMER_SEC)*50);
     G.score+=100+tb;G.correct++;G.streak++;G.sesC[q.s]=(G.sesC[q.s]||0)+1;
     if(G.streak>G.maxStreak)G.maxStreak=G.streak;
     sndCorrect();if(G.streak>=3)streakFx();setFb(true,"✅ Correct! "+q.e);recordAnswer(i,true);
@@ -972,7 +1005,7 @@ window.addEventListener("beforeunload",e=>{
 });
 window.addEventListener("online",()=>document.getElementById("offline-banner").classList.remove("on"));
 window.addEventListener("offline",()=>document.getElementById("offline-banner").classList.add("on"));
-window.addEventListener("load",()=>{if(!checkUrlAdmin())tryReconnect()});
+window.addEventListener("load",()=>{applyComingSoon();if(!checkUrlAdmin())tryReconnect()});
 </script>
 </body>
 </html>
