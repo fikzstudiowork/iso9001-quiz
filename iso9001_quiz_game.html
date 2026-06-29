@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ISO 9001:2015 — Quiz Arena · Scienotech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#080B14;--card:#0F1520;--card2:#1A2235;--card3:#222D44;
+  --rim:#ffffff0d;--rim2:#ffffff18;
+  --cyan:#00D4FF;--cyan-dim:rgba(0,212,255,.13);--cyan-glow:rgba(0,212,255,.27);
+  --amber:#FFB020;--amber-dim:rgba(255,176,32,.13);
+  --green:#00E5A0;--green-dim:rgba(0,229,160,.13);
+  --red:#FF4D6A;--red-dim:rgba(255,77,106,.13);
+  --white:#F4F8FF;--muted:#5A6A8A;--muted2:#3A4A6A;--text:#E8EFFF;
+  --r:14px;--rsm:10px;
+}
+html{height:100%;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--ink);color:var(--text);min-height:100%;display:flex;align-items:flex-start;justify-content:center;overflow-x:hidden}
+.app{width:100%;max-width:480px;min-height:100dvh;position:relative;display:flex;flex-direction:column}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.035) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(0,212,255,.055) 0%,transparent 65%);pointer-events:none;z-index:0}
+
+/* screens */
+.scr{display:none;flex-direction:column;flex:1;padding:20px 18px 36px;position:relative;z-index:1;animation:rise .3s cubic-bezier(.22,.68,0,1.2)}
+.scr.on{display:flex}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 0;position:relative;z-index:2}
+.tb-brand{display:flex;align-items:center;gap:7px}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.tb-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+.tb-pill{font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,176,32,.25);letter-spacing:.5px;text-transform:uppercase}
+.tb-pill.admin-mode{background:rgba(255,77,106,.12);color:var(--red);border-color:rgba(255,77,106,.3)}
+
+/* splash */
+.splash-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 0 12px;text-align:center}
+.emblem{width:84px;height:84px;border-radius:22px;background:var(--card2);border:1px solid var(--rim2);display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:22px;position:relative}
+.emblem::before{content:'';position:absolute;inset:-1px;border-radius:23px;background:linear-gradient(135deg,var(--cyan-glow),transparent 55%);z-index:-1}
+.kicker{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:9px}
+.splash-title{font-family:'Syne',sans-serif;font-size:clamp(28px,8vw,36px);font-weight:800;line-height:1.1;color:var(--white);margin-bottom:10px;letter-spacing:-1px}
+.splash-title em{color:var(--cyan);font-style:normal}
+.splash-sub{font-size:13px;color:var(--muted);line-height:1.65;max-width:270px;margin-bottom:26px}
+.pills{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.pill{font-size:11px;font-weight:600;padding:5px 12px;border-radius:99px;background:var(--card2);border:1px solid var(--rim2);color:var(--muted)}
+
+/* fields */
+.field{margin-bottom:11px}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.field input{width:100%;background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:14px 16px;color:var(--white);font-size:16px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .18s,box-shadow .18s;-webkit-appearance:none}
+.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-dim)}
+.field input::placeholder{color:var(--muted2)}
+
+/* buttons */
+.btn{width:100%;border:none;border-radius:var(--r);padding:15px 20px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s,opacity .13s;letter-spacing:.2px}
+.btn:active{transform:scale(.97)}
+.btn-cyan{background:var(--cyan);color:var(--ink)}
+.btn-ghost{background:transparent;border:1px solid var(--rim2);color:var(--muted);margin-top:8px}
+.btn-ghost:hover{border-color:var(--rim);color:var(--text)}
+.btn-red{background:transparent;border:1px solid rgba(255,77,106,.25);color:var(--red);margin-top:8px}
+.admin-lnk{text-align:center;margin-top:18px}
+.admin-lnk a{font-size:12px;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--muted2);padding-bottom:1px;transition:color .15s}
+.admin-lnk a:hover{color:var(--cyan)}
+
+/* stat strip */
+.stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat-box{background:var(--card);border:1px solid var(--rim);border-radius:var(--rsm);padding:12px 8px;text-align:center}
+.stat-box .n{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--cyan);display:block}
+.stat-box .l{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* waiting room */
+.live-chip{display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:1px solid rgba(0,229,160,.25);border-radius:99px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--green);letter-spacing:.3px}
+.live-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.1s ease infinite}
+.mosaic{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin-bottom:18px}
+.p-chip{background:var(--card);border:1px solid var(--rim);border-radius:var(--rsm);padding:11px 8px;text-align:center;animation:rise .25s ease}
+.p-chip .av{font-size:24px;display:block;margin-bottom:4px}
+.p-chip .nm{font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+
+/* admin */
+.admin-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.admin-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--white)}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.link-card{background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:14px;transition:border-color .15s}
+.link-card:hover{border-color:var(--cyan)}
+.link-url{flex:1;font-size:12px;color:var(--cyan);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.link-cta{font-size:11px;font-weight:600;color:var(--muted);background:var(--card2);border:1px solid var(--rim);border-radius:6px;padding:4px 9px;flex-shrink:0}
+.start-banner{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(0,212,255,.04));border:1px solid var(--cyan-glow);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.start-banner p{font-size:13px;color:var(--text);font-weight:500;line-height:1.4}
+.start-banner p strong{color:var(--cyan)}
+.btn-start-now{background:var(--cyan);color:var(--ink);border:none;border-radius:var(--rsm);padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .15s}
+.btn-start-now:hover{opacity:.85}
+.alb-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--rim);border-radius:var(--rsm);margin-bottom:6px;animation:rise .22s ease}
+.alb-rank{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;width:22px;text-align:center;color:var(--muted);flex-shrink:0}
+.r1{color:var(--amber)}.r2{color:#B0B0B0}.r3{color:#A0825A}
+.alb-av{font-size:19px;flex-shrink:0}
+.alb-name{flex:1;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alb-sc{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--amber);flex-shrink:0}
+.alb-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;flex-shrink:0;letter-spacing:.3px}
+.t-done{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,160,.25)}
+.t-play{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,176,32,.2)}
+.ex-btn{width:100%;background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:13px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;margin-bottom:7px;text-align:left;display:flex;align-items:center;gap:10px}
+.ex-btn:hover{background:var(--card2);color:var(--text)}
+
+/* quiz hud */
+.hud{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hud-pl{flex:1;font-size:13px;font-weight:600;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hud-pts{display:flex;align-items:center;gap:5px;background:var(--amber-dim);border:1px solid rgba(255,176,32,.2);border-radius:99px;padding:5px 12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--amber);flex-shrink:0}
+
+/* progress bar */
+.prog-track{height:3px;background:var(--card2);border-radius:99px;margin-bottom:18px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),#00AABB);transition:width .4s ease}
+
+/* timer ring */
+.timer-wrap{display:flex;justify-content:center;margin-bottom:18px}
+.timer-container{position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center}
+.timer-svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--card2);stroke-width:5}
+.ring-prog{fill:none;stroke:var(--cyan);stroke-width:5;stroke-linecap:round;stroke-dasharray:219.9;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .3s}
+.ring-prog.urgent{stroke:var(--red)}
+.timer-num{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--white);line-height:1;position:relative;z-index:1;transition:color .3s}
+.timer-num.urgent{color:var(--red)}
+
+/* q meta */
+.q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.q-sess-tag{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);background:var(--cyan-dim);border:1px solid var(--cyan-glow);border-radius:99px;padding:4px 11px}
+.q-num{font-size:12px;color:var(--muted);font-weight:600}
+.q-text{font-family:'Syne',sans-serif;font-size:clamp(15px,4.2vw,19px);font-weight:700;line-height:1.38;color:var(--white);margin-bottom:22px}
+
+/* options */
+.opts{display:grid;gap:9px;margin-bottom:14px}
+.opt{width:100%;background:var(--card);border:1.5px solid var(--rim2);border-radius:var(--r);padding:14px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left;color:var(--text);font-family:'DM Sans',sans-serif;transition:border-color .12s,background .12s,transform .1s;position:relative;overflow:hidden}
+.opt::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--cyan-dim),transparent 70%);opacity:0;transition:opacity .15s}
+.opt:not(:disabled):hover{border-color:rgba(0,212,255,.32);transform:translateX(3px)}
+.opt:not(:disabled):hover::before{opacity:1}
+.opt:not(:disabled):active{transform:scale(.98)}
+.opt:disabled{cursor:default}
+.opt-k{width:33px;height:33px;border-radius:8px;background:var(--card2);border:1px solid var(--rim);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--muted);flex-shrink:0;transition:all .14s}
+.opt-t{font-size:13px;font-weight:500;line-height:1.4}
+.opt.correct{background:var(--green-dim);border-color:var(--green)}
+.opt.correct .opt-k{background:var(--green);border-color:var(--green);color:var(--ink)}
+.opt.wrong{background:var(--red-dim);border-color:var(--red)}
+.opt.wrong .opt-k{background:var(--red);border-color:var(--red);color:var(--white)}
+.opt.reveal{background:rgba(0,229,160,.06);border-color:rgba(0,229,160,.32)}
+.opt.reveal .opt-k{background:rgba(0,229,160,.22);border-color:rgba(0,229,160,.45);color:var(--green)}
+
+/* feedback */
+.fb{background:var(--card);border-radius:var(--r);padding:13px 15px;font-size:12px;line-height:1.65;color:var(--muted);display:none;animation:rise .2s ease;border-left:3px solid var(--rim2);margin-bottom:13px}
+.fb.on{display:block}
+.fb.ok{border-color:var(--green);color:#9fffd8}
+.fb.no{border-color:var(--red);color:#ffb3bf}
+.fb strong{color:var(--white)}
+
+/* next */
+.nxt-w{display:none}
+.nxt-w.on{display:block}
+
+/* live leaderboard */
+.lb-sect{margin-top:6px}
+.lb-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lb-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.lb-count{font-size:11px;color:var(--muted2)}
+.lb-row{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--card);border:1px solid var(--rim);border-radius:var(--rsm);margin-bottom:5px;transition:all .3s}
+.lb-row.me{border-color:var(--cyan);background:var(--cyan-dim)}
+.lb-rank{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;width:20px;text-align:center;flex-shrink:0;color:var(--muted)}
+.lb-av{font-size:16px;flex-shrink:0}
+.lb-name{flex:1;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-bar-track{width:46px;height:3px;background:var(--card3);border-radius:99px;overflow:hidden;flex-shrink:0}
+.lb-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#00AABB);border-radius:99px;transition:width .5s ease}
+.lb-pts{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--amber);flex-shrink:0;min-width:42px;text-align:right}
+
+/* result */
+.res-hero{text-align:center;padding:16px 0 22px}
+.res-av{font-size:60px;display:block;animation:pop .38s cubic-bezier(.175,.885,.32,1.275);margin-bottom:10px}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.res-player{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:3px}
+.res-pct{font-family:'Syne',sans-serif;font-size:clamp(56px,17vw,76px);font-weight:800;line-height:1;letter-spacing:-3px;color:var(--amber);margin-bottom:3px}
+.res-lbl{font-size:13px;color:var(--muted);margin-bottom:10px}
+.res-badge{display:inline-block;padding:5px 15px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:22px}
+.r-pass{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,160,.3)}
+.r-fail{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,106,.25)}
+.bk-grid{display:grid;grid-template-columns:repeat(3,1fr);background:var(--card);border:1px solid var(--rim);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.bk-cell{padding:15px 8px;text-align:center;border-right:1px solid var(--rim)}
+.bk-cell:last-child{border-right:none}
+.bk-n{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;display:block;margin-bottom:2px}
+.bk-l{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.cg{color:var(--green)}.cr{color:var(--red)}.ca{color:var(--amber)}
+.ses-wrap{margin-bottom:18px}
+.ses-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ses-lbl{font-size:11px;color:var(--muted);min-width:62px;text-align:right;flex-shrink:0}
+.ses-track{flex:1;height:5px;background:var(--card2);border-radius:99px;overflow:hidden}
+.ses-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#00AABB);border-radius:99px}
+.ses-pct{font-size:11px;color:var(--muted2);min-width:26px;text-align:right;flex-shrink:0;font-weight:600}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+
+/* certificate */
+.cert-card{background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:20px;text-align:center;margin-bottom:16px}
+.cert-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--white);margin-bottom:4px}
+.cert-sub{font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.cert-score{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--amber);margin-bottom:14px}
+.cert-dl{background:var(--cyan);color:var(--ink);border:none;border-radius:var(--rsm);padding:11px 22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.cert-dl:hover{opacity:.86}
+
+/* divider / empty */
+.divider{height:1px;background:var(--rim);margin:14px 0}
+.empty{text-align:center;padding:22px 0;font-size:13px;color:var(--muted2)}
+.empty span{display:block;font-size:26px;margin-bottom:7px}
+
+/* toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--amber);color:var(--ink);padding:9px 20px;border-radius:99px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;z-index:9999;transition:transform .36s cubic-bezier(.175,.885,.32,1.275);white-space:nowrap;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+/* confetti */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden}
+.cp{position:absolute;top:-12px;animation:fall linear forwards;border-radius:2px}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* setup notice */
+.setup-bar{position:fixed;bottom:0;left:0;right:0;background:var(--card2);border-top:1px solid var(--rim2);padding:11px 16px;z-index:9997;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.setup-bar strong{color:var(--cyan)}
+.setup-close{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;padding:0 2px;flex-shrink:0}
+
+/* admin "how to access" card */
+.how-card{background:var(--card2);border:1px solid var(--cyan-glow);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.how-card h3{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--cyan);margin-bottom:8px}
+.how-row{display:flex;align-items:flex-start;gap:9px;margin-bottom:7px;font-size:12px;color:var(--muted);line-height:1.5}
+.how-num{font-family:'Syne',sans-serif;font-weight:800;color:var(--cyan);min-width:18px;font-size:13px}
+
+@media(max-width:360px){.scr{padding:16px 13px 28px}.btn-row{grid-template-columns:1fr}}
+@media(min-width:480px){.app{border-left:1px solid var(--rim);border-right:1px solid var(--rim)}}
+</style>
+</head>
+<body>
+<div id="confetti"></div>
+<div id="toast" class="toast"></div>
+
+<div class="app">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-dot"></div>
+      <div class="tb-name">Scienotech</div>
+    </div>
+    <div class="tb-pill" id="tb-pill">ISO 9001:2015</div>
+  </div>
+
+  <!-- ══ SPLASH ══ -->
+  <div class="scr on" id="s-splash">
+    <div class="splash-hero">
+      <div class="emblem">🏆</div>
+      <div class="kicker">Quality Management · Live Quiz</div>
+      <div class="splash-title">Quiz<br><em>Arena</em></div>
+      <div class="splash-sub">Real-time multiplayer. Answer fast, earn streak bonuses, climb the live leaderboard.</div>
+      <div class="pills">
+        <div class="pill">20 questions</div>
+        <div class="pill">30s timer</div>
+        <div class="pill">Live leaderboard</div>
+        <div class="pill">Certificate</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Your name</label>
+      <input id="inp-name" type="text" placeholder="Enter your name..." maxlength="28" autocomplete="off"/>
+    </div>
+    <button class="btn btn-cyan" onclick="joinGame()">Enter the arena →</button>
+    <div class="admin-lnk"><a href="#" onclick="showAdminLogin();return false">Trainer / admin →</a></div>
+  </div>
+
+  <!-- ══ ADMIN LOGIN ══ -->
+  <div class="scr" id="s-admin-login" style="justify-content:center">
+    <div style="text-align:center;margin-bottom:30px">
+      <div style="font-size:40px;margin-bottom:11px">🔐</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--white);margin-bottom:5px">Trainer access</div>
+      <div style="font-size:13px;color:var(--muted)">Enter your PIN to open the dashboard</div>
+    </div>
+
+    <!-- HOW TO ACCESS AS ADMIN -->
+    <div class="how-card">
+      <h3>💡 Two ways to access admin</h3>
+      <div class="how-row"><div class="how-num">1</div><div>Enter the PIN below (PIN: <strong style="color:var(--white)">9001</strong>). Change it in the code before publishing.</div></div>
+      <div class="how-row"><div class="how-num">2</div><div>Add <strong style="color:var(--white)">?trainer=9001</strong> to the end of your URL — opens admin directly. Bookmark that link for yourself, share the plain link with players.</div></div>
+    </div>
+
+    <div class="field">
+      <label>PIN</label>
+      <input id="inp-pin" type="password" placeholder="••••" maxlength="6" autocomplete="off" onkeydown="if(event.key==='Enter')checkPin()"/>
+    </div>
+    <button class="btn btn-cyan" onclick="checkPin()">Open dashboard</button>
+    <button class="btn btn-ghost" onclick="show('s-splash')">← Back</button>
+  </div>
+
+  <!-- ══ WAITING ROOM ══ -->
+  <div class="scr" id="s-waiting">
+    <div style="text-align:center;padding:26px 0 18px">
+      <div style="font-size:38px;margin-bottom:11px">👋</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--white);margin-bottom:5px" id="w-greet">You're in!</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:15px">Waiting for the trainer to start the game</div>
+      <div class="live-chip"><div class="dot"></div>Live &nbsp;·&nbsp; <span id="w-count">0</span> joined</div>
+    </div>
+    <div class="sec-label" style="margin-top:8px">Players in the room</div>
+    <div class="mosaic" id="w-players"><div class="empty"><span>👀</span>No one yet</div></div>
+  </div>
+
+  <!-- ══ ADMIN DASHBOARD ══ -->
+  <div class="scr" id="s-admin">
+    <div class="admin-hdr">
+      <div class="admin-title">Dashboard</div>
+      <div style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(255,77,106,.12);color:var(--red);border:1px solid rgba(255,77,106,.3);letter-spacing:.5px;text-transform:uppercase">Admin</div>
+    </div>
+
+    <div class="how-card" style="margin-bottom:14px">
+      <h3>🔑 Your admin link (bookmark this!)</h3>
+      <div class="how-row"><div class="how-num">→</div><div>Share the <strong style="color:var(--white)">plain link</strong> with players. Use your <strong style="color:var(--white)">?trainer=9001</strong> link for yourself — it opens admin directly without a PIN prompt.</div></div>
+    </div>
+
+    <div class="start-banner" id="start-banner">
+      <p><strong id="start-count">0</strong> player(s) waiting — ready to begin?</p>
+      <button class="btn-start-now" onclick="adminStartGame()">Start →</button>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-box"><span class="n" id="a-joined">0</span><div class="l">Joined</div></div>
+      <div class="stat-box"><span class="n" id="a-done">0</span><div class="l">Done</div></div>
+      <div class="stat-box"><span class="n" id="a-pass">—</span><div class="l">Pass rate</div></div>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-box"><span class="n" id="a-avg">—</span><div class="l">Avg score</div></div>
+      <div class="stat-box"><span class="n" id="a-top">—</span><div class="l">Top score</div></div>
+      <div class="stat-box"><span class="n" id="a-avgp">—</span><div class="l">Avg %</div></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-label">Player link — share with participants</div>
+    <div class="link-card" onclick="copyLink('player')">
+      <div class="link-url" id="a-link-player">—</div>
+      <div class="link-cta">Copy</div>
+    </div>
+    <div class="sec-label">Your admin link — bookmark &amp; keep private</div>
+    <div class="link-card" onclick="copyLink('admin')">
+      <div class="link-url" id="a-link-admin">—</div>
+      <div class="link-cta">Copy</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-label">Live leaderboard</div>
+    <div id="a-lb"><div class="empty"><span>⏳</span>Waiting for players...</div></div>
+
+    <div class="divider"></div>
+    <button class="ex-btn" onclick="exportCSV()">📊 &nbsp;Export results as CSV</button>
+    <button class="ex-btn" onclick="exportHTML()">📋 &nbsp;Export leaderboard as printable page</button>
+    <button class="btn btn-red" onclick="resetGame()">🗑 Reset session</button>
+    <button class="btn btn-ghost" onclick="show('s-splash')">← Home</button>
+  </div>
+
+  <!-- ══ QUIZ ══ -->
+  <div class="scr" id="s-quiz">
+    <div class="hud">
+      <div class="hud-pl" id="h-player">—</div>
+      <div class="hud-pts">⭐ <span id="h-score">0</span></div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="q-meta">
+      <div class="q-sess-tag" id="q-sess"></div>
+      <div class="q-num" id="q-num"></div>
+    </div>
+
+    <!-- TIMER RING (signature element) -->
+    <div class="timer-wrap">
+      <div class="timer-container">
+        <svg class="timer-svg" width="80" height="80" viewBox="0 0 80 80">
+          <circle class="ring-track" cx="40" cy="40" r="35"/>
+          <circle class="ring-prog" id="ring" cx="40" cy="40" r="35"/>
+        </svg>
+        <div class="timer-num" id="timer-num">30</div>
+      </div>
+    </div>
+
+    <div class="q-text" id="q-text"></div>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <div class="nxt-w" id="nxt-w">
+      <button class="btn btn-cyan" id="btn-nxt" onclick="nextQ()">Next →</button>
+    </div>
+
+    <div class="lb-sect" id="lb-sect" style="display:none">
+      <div class="lb-hdr">
+        <div class="lb-title">Live leaderboard</div>
+        <div class="lb-count" id="lb-count"></div>
+      </div>
+      <div id="live-lb"></div>
+    </div>
+  </div>
+
+  <!-- ══ RESULT ══ -->
+  <div class="scr" id="s-result">
+    <div class="res-hero">
+      <span class="res-av" id="r-av">🎉</span>
+      <div class="res-player" id="r-player"></div>
+      <div class="res-pct" id="r-pct">0%</div>
+      <div class="res-lbl" id="r-lbl"></div>
+      <div class="res-badge" id="r-badge"></div>
+    </div>
+    <div class="bk-grid" id="r-bk"></div>
+    <div class="divider"></div>
+    <div class="sec-label" style="margin-bottom:11px">Score by session</div>
+    <div class="ses-wrap" id="r-ses"></div>
+    <div id="cert-wrap"></div>
+    <div class="sec-label" style="margin-bottom:9px">Final leaderboard</div>
+    <div id="r-lb" style="margin-bottom:20px"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" style="margin-top:0" onclick="playAgain()">Play again</button>
+      <button class="btn btn-cyan" onclick="shareResult()">Share result</button>
+    </div>
+  </div>
+
+</div><!-- .app -->
+
+<!-- Firebase -->
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-database-compat.min.js"></script>
+
+<script>
+/* ─────────────────────────────────────────────
+   FIREBASE CONFIG
+   1. Go to console.firebase.google.com
+   2. Create a project (free) → Realtime Database → Create database (Test mode)
+   3. Project Settings → Your apps → Add Web app → copy config here
+───────────────────────────────────────────── */
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBgXoFIYtKwbWTDzO16Ngz2PSAYmGN4esg",
+  authDomain: "is09001-quiz-yhy.firebaseapp.com",
+  databaseURL: "https://is09001-quiz-yhy-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "is09001-quiz-yhy",
+  storageBucket: "is09001-quiz-yhy.firebasestorage.app",
+  messagingSenderId: "990497673756",
+  appId: "1:990497673756:web:049e4543bb3c2d979685d9",
+  measurementId: "G-048X3PW5EX"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+/* ─────────────────────────────────────────────
+   ADMIN ACCESS
+   - Players use: https://yoursite.com/quiz.html
+   - Trainer uses: https://yoursite.com/quiz.html?trainer=9001
+   - Change PIN below (keep the same value in both places)
+───────────────────────────────────────────── */
+const ADMIN_PIN = "9001";
+
+/* ─────────────────────────────────────────────
+   QUESTIONS
+───────────────────────────────────────────── */
+const QS=[
+  {s:"Session 1",q:"What is the primary purpose of ISO 9001:2015?",o:["To certify individual employees in quality management","To provide requirements for a Quality Management System","To regulate manufacturing processes only","To set financial auditing standards"],a:1,e:"ISO 9001:2015 specifies requirements for a QMS that helps organisations consistently provide products and services meeting customer and regulatory requirements."},
+  {s:"Session 1",q:"How many quality management principles underpin ISO 9001:2015?",o:["5","6","7","8"],a:2,e:"ISO 9001:2015 is built on 7 principles: customer focus, leadership, engagement of people, process approach, improvement, evidence-based decision making, and relationship management."},
+  {s:"Session 1",q:"Which clause of ISO 9001:2015 covers 'Leadership and Commitment'?",o:["Clause 4","Clause 5","Clause 6","Clause 7"],a:1,e:"Clause 5 covers Leadership. Top management must demonstrate leadership and commitment to the QMS."},
+  {s:"Session 1",q:"What does 'context of the organisation' (Clause 4) require?",o:["Determining budget and headcount","Identifying internal and external issues relevant to the QMS","Benchmarking competitors only","Measuring customer scores only"],a:1,e:"Clause 4 requires organisations to determine external and internal issues relevant to their purpose that could affect QMS outcomes."},
+  {s:"Session 2",q:"What does the 'process approach' in ISO 9001:2015 mean?",o:["Managing each department independently","Understanding and managing interrelated activities as a system","Following steps in a strictly linear order","Outsourcing non-core processes"],a:1,e:"The process approach means managing interrelated activities as a system, contributing to efficiency and effectiveness in achieving intended results."},
+  {s:"Session 2",q:"What is the PDCA cycle in the context of ISO 9001:2015?",o:["Produce, Deliver, Check, Adjust","Plan, Do, Check, Act","Plan, Deploy, Control, Audit","Process, Document, Certify, Assess"],a:1,e:"PDCA stands for Plan, Do, Check, Act — a cyclical method that underpins ISO 9001:2015 and drives continual improvement."},
+  {s:"Session 2",q:"Which concept did ISO 9001:2015 formally introduce vs. the 2008 version?",o:["Internal audits","Risk-based thinking","Document control","Management review"],a:1,e:"Risk-based thinking was formally introduced in ISO 9001:2015, replacing 'preventive action' and requiring organisations to address risks and opportunities proactively."},
+  {s:"Session 2",q:"What does ISO 9001:2015 Clause 8 (Operations) primarily address?",o:["Strategic planning and risk management","Planning and control of production and service provision","Internal audit procedures","Employee training and competence"],a:1,e:"Clause 8 covers operational planning and control — planning, designing, producing, and delivering products and services that meet requirements."},
+  {s:"Session 3",q:"Which of the following is NOT one of the 7 quality management principles?",o:["Customer focus","Engagement of people","Zero defect manufacturing","Evidence-based decision making"],a:2,e:"Zero defect manufacturing is not a QMS principle. The 7 are: customer focus, leadership, engagement of people, process approach, improvement, evidence-based decision making, and relationship management."},
+  {s:"Session 3",q:"What does 'interested parties' refer to in ISO 9001:2015?",o:["Shareholders and investors only","Persons or organisations affected by the organisation's decisions","Certified suppliers only","Internal employees only"],a:1,e:"Interested parties (stakeholders) are persons or organisations that can affect, be affected by, or perceive themselves to be affected by a decision or activity."},
+  {s:"Session 3",q:"Who is responsible for the effectiveness of the QMS under ISO 9001:2015?",o:["Only the Quality Manager","External consultants","Top management","The certification body"],a:2,e:"ISO 9001:2015 places accountability on top management, who must demonstrate leadership and take responsibility for the QMS effectiveness."},
+  {s:"Session 3",q:"What is the significance of 'continual improvement' in ISO 9001:2015?",o:["It only applies to manufacturers","It is an optional enhancement","It is a core requirement to enhance QMS performance","It refers to ISO certification renewal only"],a:2,e:"Continual improvement (Clause 10.3) is a fundamental requirement — organisations must continually improve the suitability, adequacy, and effectiveness of the QMS."},
+  {s:"Session 4",q:"What does 'documented information' mean in ISO 9001:2015?",o:["All procedures must be printed on paper","Specific information must be documented, maintained or retained","Only quality records must be kept","Documents need certification body approval"],a:1,e:"ISO 9001:2015 uses 'documented information' to replace 'documents and records', specifying what must be maintained (documents) or retained (records)."},
+  {s:"Session 4",q:"What is the purpose of a management review in ISO 9001:2015?",o:["To approve new product designs","To ensure the QMS remains suitable, adequate and effective","To conduct employee appraisals","To plan marketing activities"],a:1,e:"Management review (Clause 9.3) requires top management to review the QMS at planned intervals to ensure its continuing suitability, adequacy, and effectiveness."},
+  {s:"Session 4",q:"Which clause covers 'Competence' and 'Awareness'?",o:["Clause 5","Clause 6","Clause 7","Clause 8"],a:2,e:"Clause 7 (Support) covers competence (7.2), awareness (7.3), communication (7.4), and documented information (7.5) — all support resources the QMS needs."},
+  {s:"Session 4",q:"Which clause requires monitoring and measuring customer satisfaction?",o:["Clause 7","Clause 8","Clause 9","Clause 10"],a:2,e:"Clause 9 (Performance Evaluation) requires monitoring information relating to customer perception — how well customer needs and expectations have been fulfilled."},
+  {s:"Session 5",q:"What must an organisation establish as part of Clause 6 (Planning)?",o:["Profit targets and sales forecasts","Quality objectives and plans to achieve them","Employee appraisal methods","Customer feedback portals"],a:1,e:"Clause 6 requires quality objectives at relevant functions and levels, with plans covering what will be done, resources, timelines, and how results will be evaluated."},
+  {s:"Session 5",q:"What is a 'corrective action' in ISO 9001:2015?",o:["A preventive step taken before an issue occurs","An action to eliminate the cause of a nonconformity and prevent recurrence","A routine quality check","A management review finding"],a:1,e:"Corrective action (Clause 10.2) identifies the root cause of a nonconformity and takes action to prevent it recurring. It is reactive — responding to an actual problem."},
+  {s:"Session 5",q:"What is the purpose of an internal audit under ISO 9001:2015?",o:["To prepare for certification renewal only","To determine if the QMS conforms and is effectively implemented","To evaluate competitor practices","To replace management reviews"],a:1,e:"Internal audits (Clause 9.2) determine whether the QMS conforms to planned arrangements and ISO 9001:2015 requirements, and is effectively implemented."},
+  {s:"Session 5",q:"What is required when a nonconformity occurs under Clause 10.2?",o:["Immediate suspension of operations","React, evaluate, determine root cause, and take corrective action","Report to the certification body immediately","Issue a formal customer complaint"],a:1,e:"When a nonconformity occurs: react to control it, evaluate the need for corrective action, determine root cause, implement action, review effectiveness, and update risk information."}
+];
+
+const SESS=["Session 1","Session 2","Session 3","Session 4","Session 5"];
+const AVATS=["🧑","👩","👨","🧑‍💼","👩‍💼","👨‍💼","🧑‍🔬","👩‍🔬","🦸","🦸‍♀️","🎯","⚡","🦊","🐯","🦁"];
+const CIRC=219.9; // 2π×35
+
+/* ── STATE ── */
+let db=null,pRef=null,psRef=null,gRef=null;
+let G={
+  name:"",uid:"",avatar:"",
+  cur:0,score:0,streak:0,maxStreak:0,
+  correct:0,wrong:0,timeouts:0,
+  answered:false,tmr:null,timeLeft:30,
+  sesC:{},sesT:{},isAdmin:false,fbOk:false
+};
+
+/* ── AUDIO ── */
+let _ac=null;
+function ac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
+function tone(f,d,t='sine',v=.26){
+  try{const c=ac(),o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type=t;
+  g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);
+  o.start();o.stop(c.currentTime+d)}catch(e){}
+}
+function sndJoin(){[330,440,550].forEach((f,i)=>setTimeout(()=>tone(f,.09,'square',.18),i*80))}
+function sndCorrect(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.08,'square',.2),i*65))}
+function sndWrong(){tone(200,.11,'sawtooth',.28);setTimeout(()=>tone(155,.18,'sawtooth',.22),120)}
+function sndTimeout(){tone(220,.08,'sawtooth',.2);setTimeout(()=>tone(170,.22,'sawtooth',.17),85)}
+function sndTick(){tone(900,.038,'square',.055)}
+function sndStreak(){[880,1047,1319,1760].forEach((f,i)=>setTimeout(()=>tone(f,.07,'square',.17),i*55))}
+function sndStart(){[261,329,392,523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,.09,'square',.2),i*85))}
+
+/* ── FIREBASE ── */
+function initFB(){
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(FB);
+    db=firebase.database();psRef=db.ref('quiz/players');gRef=db.ref('quiz/game');
+    G.fbOk=true;
+  }catch(e){G.fbOk=false;console.warn('Firebase not configured — offline/demo mode')}
+}
+function mkUid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+/* ── URL PARAM ADMIN CHECK ── */
+function checkUrlAdmin(){
+  const p=new URLSearchParams(window.location.search);
+  const trainerParam=p.get('trainer');
+  if(trainerParam===ADMIN_PIN){
+    G.isAdmin=true;initFB();showAdmin();return true;
+  }
+  return false;
+}
+
+/* ── NAV ── */
+function show(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+/* ── JOIN ── */
+function joinGame(){
+  const name=document.getElementById('inp-name').value.trim();
+  if(!name){document.getElementById('inp-name').focus();return}
+  ac();sndJoin();
+  G.name=name;G.uid=mkUid();G.avatar=AVATS[~~(Math.random()*AVATS.length)];
+  SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
+  initFB();
+  if(G.fbOk){
+    pRef=psRef.child(G.uid);
+    pRef.set({name:G.name,avatar:G.avatar,score:0,correct:0,done:false,joined:Date.now()});
+    pRef.onDisconnect().remove();
+    showWaiting();
+  }else{show('s-quiz');startQuiz()}
+}
+
+/* ── WAITING ROOM ── */
+function showWaiting(){
+  show('s-waiting');
+  document.getElementById('w-greet').textContent=`You're in, ${G.name}!`;
+  psRef.on('value',snap=>{
+    const d=snap.val()||{};
+    const ps=Object.values(d);
+    document.getElementById('w-count').textContent=ps.length;
+    document.getElementById('w-players').innerHTML=ps.length
+      ?ps.map(p=>`<div class="p-chip"><span class="av">${p.avatar}</span><div class="nm">${esc(p.name)}</div></div>`).join('')
+      :'<div class="empty"><span>👀</span>No one yet</div>';
+  });
+  gRef.on('value',snap=>{
+    if(snap.val()?.started){psRef.off();gRef.off();show('s-quiz');startQuiz()}
+  });
+}
+
+/* ── ADMIN ── */
+function showAdminLogin(){show('s-admin-login')}
+function checkPin(){
+  const p=document.getElementById('inp-pin').value.trim();
+  if(p===ADMIN_PIN){G.isAdmin=true;initFB();showAdmin()}
+  else{
+    document.getElementById('inp-pin').value='';
+    document.getElementById('inp-pin').placeholder='Wrong PIN, try again…';
+    sndWrong();
+    setTimeout(()=>{document.getElementById('inp-pin').placeholder='••••'},2200);
+  }
+}
+function showAdmin(){
+  show('s-admin');
+  document.getElementById('tb-pill').textContent='TRAINER';
+  document.getElementById('tb-pill').classList.add('admin-mode');
+  const base=window.location.href.split('?')[0];
+  document.getElementById('a-link-player').textContent=base;
+  document.getElementById('a-link-admin').textContent=base+'?trainer='+ADMIN_PIN;
+  initFB();
+  psRef.on('value',snap=>{
+    const d=snap.val()||{};const ps=Object.values(d);
+    const done=ps.filter(x=>x.done);
+    const scores=done.map(x=>x.score||0);
+    const avgS=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+    const avgPct=done.length?Math.round(done.map(x=>(x.correct||0)/QS.length*100).reduce((a,b)=>a+b,0)/done.length):null;
+    const topS=scores.length?Math.max(...scores):null;
+    const passR=done.length?Math.round(done.filter(x=>(x.correct||0)/QS.length>=.7).length/done.length*100):null;
+    document.getElementById('a-joined').textContent=ps.length;
+    document.getElementById('a-done').textContent=done.length;
+    document.getElementById('a-pass').textContent=passR!==null?passR+'%':'—';
+    document.getElementById('a-avg').textContent=avgS!==null?avgS:'—';
+    document.getElementById('a-top').textContent=topS!==null?topS:'—';
+    document.getElementById('a-avgp').textContent=avgPct!==null?avgPct+'%':'—';
+    document.getElementById('start-count').textContent=ps.length;
+    const sorted=ps.sort((a,b)=>(b.score||0)-(a.score||0));
+    document.getElementById('a-lb').innerHTML=sorted.length
+      ?sorted.map((p,i)=>`
+        <div class="alb-row">
+          <div class="alb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${rs(i)}</div>
+          <div class="alb-av">${p.avatar}</div>
+          <div class="alb-name">${esc(p.name)}</div>
+          <div class="alb-sc">⭐${p.score||0}</div>
+          <div class="alb-tag ${p.done?'t-done':'t-play'}">${p.done?'Done':'Playing'}</div>
+        </div>`).join('')
+      :'<div class="empty"><span>⏳</span>Waiting for players...</div>';
+  });
+}
+function adminStartGame(){
+  if(!G.fbOk){toast('Connect Firebase first');return}
+  gRef.set({started:true,at:Date.now()});toast('🚀 Game started!')
+}
+function copyLink(type){
+  const base=window.location.href.split('?')[0];
+  const url=type==='admin'?base+'?trainer='+ADMIN_PIN:base;
+  navigator.clipboard.writeText(url).then(()=>toast(type==='admin'?'🔐 Admin link copied!':'🔗 Player link copied!')).catch(()=>{})
+}
+function exportCSV(){
+  if(!G.fbOk){toast('Firebase not connected');return}
+  psRef.once('value',snap=>{
+    const d=snap.val()||{};
+    const rows=[['Name','Score','Correct','Percentage','Passed','Status']];
+    Object.values(d).forEach(p=>{
+      const pct=Math.round((p.correct||0)/QS.length*100);
+      rows.push([p.name,p.score||0,p.correct||0,pct+'%',pct>=70?'Yes':'No',p.done?'Done':'In progress']);
+    });
+    const blob=new Blob([rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ISO9001_Results.csv';a.click();
+  })
+}
+function exportHTML(){
+  if(!G.fbOk){toast('Firebase not connected');return}
+  psRef.once('value',snap=>{
+    const d=snap.val()||{};
+    const sorted=Object.values(d).sort((a,b)=>(b.score||0)-(a.score||0));
+    const rows=sorted.map((p,i)=>{
+      const pct=Math.round((p.correct||0)/QS.length*100);
+      return `<tr><td>${i+1}</td><td>${p.avatar} ${esc(p.name)}</td><td>${p.score||0}</td><td>${pct}%</td><td>${pct>=70?'✅ Pass':'❌ Fail'}</td></tr>`;
+    }).join('');
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ISO 9001:2015 Quiz Results</title><style>body{font-family:sans-serif;padding:32px;background:#f8f9fa}h1{font-size:22px;margin-bottom:4px}p{color:#666;margin-bottom:24px}table{width:100%;border-collapse:collapse}th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e0e0e0}th{background:#f1f3f5;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#555}tr:hover td{background:#f8f8f8}@media print{body{padding:16px}}</style></head><body><h1>ISO 9001:2015 Quiz — Results</h1><p>Scienotech Sdn Bhd &nbsp;·&nbsp; ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><table><thead><tr><th>#</th><th>Name</th><th>Score</th><th>%</th><th>Result</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+    const a=document.createElement('a');a.href='data:text/html;charset=utf-8,'+encodeURIComponent(html);a.download='ISO9001_Leaderboard.html';a.click();
+  })
+}
+function resetGame(){
+  if(!confirm('Reset entire session? All player data will be cleared.'))return;
+  db.ref('quiz').remove();
+  document.getElementById('a-lb').innerHTML='<div class="empty"><span>⏳</span>Waiting for players...</div>';
+  toast('Session reset');
+}
+
+/* ── QUIZ ENGINE ── */
+function startQuiz(){
+  sndStart();
+  G.cur=0;G.score=0;G.streak=0;G.maxStreak=0;G.correct=0;G.wrong=0;G.timeouts=0;G.answered=false;
+  SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
+  renderQ();
+  if(G.fbOk)listenLB();
+}
+function renderQ(){
+  const q=QS[G.cur];G.answered=false;G.sesT[q.s]=(G.sesT[q.s]||0)+1;
+  document.getElementById('h-player').textContent=G.avatar+' '+G.name;
+  document.getElementById('h-score').textContent=G.score;
+  document.getElementById('q-sess').textContent=q.s;
+  document.getElementById('q-num').textContent=`Q ${G.cur+1} / ${QS.length}`;
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('prog-fill').style.width=(G.cur/QS.length*100)+'%';
+  const K=['A','B','C','D'];
+  document.getElementById('opts').innerHTML=q.o.map((o,i)=>`
+    <button class="opt" onclick="pick(${i})">
+      <div class="opt-k">${K[i]}</div>
+      <div class="opt-t">${esc(o)}</div>
+    </button>`).join('');
+  document.getElementById('fb').className='fb';
+  document.getElementById('nxt-w').className='nxt-w';
+  document.getElementById('btn-nxt').textContent=G.cur+1<QS.length?'Next question →':'See results →';
+  document.getElementById('lb-sect').style.display='none';
+  setRing(30,false);startTmr();
+}
+function startTmr(){
+  G.timeLeft=30;clearInterval(G.tmr);
+  G.tmr=setInterval(()=>{
+    G.timeLeft--;setRing(G.timeLeft,G.timeLeft<=8);
+    document.getElementById('timer-num').textContent=G.timeLeft;
+    if(G.timeLeft<=5&&G.timeLeft>0)sndTick();
+    if(G.timeLeft<=0){clearInterval(G.tmr);autoEnd()}
+  },1000);
+}
+function setRing(t,urgent){
+  const r=document.getElementById('ring');
+  r.style.strokeDashoffset=CIRC-(t/30)*CIRC;
+  r.className='ring-prog'+(urgent?' urgent':'');
+  const n=document.getElementById('timer-num');
+  n.className='timer-num'+(urgent?' urgent':'');
+}
+function autoEnd(){
+  if(G.answered)return;
+  G.answered=true;G.timeouts++;G.streak=0;sndTimeout();
+  const q=QS[G.cur];
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.opt')[q.a].classList.add('reveal');
+  setFb(false,'⏰ Time\'s up! '+q.e);showNxt();
+}
+function pick(i){
+  if(G.answered)return;
+  clearInterval(G.tmr);G.answered=true;
+  const q=QS[G.cur],btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  if(i===q.a){
+    btns[i].classList.add('correct');
+    const tb=Math.round((G.timeLeft/30)*50);
+    G.score+=100+tb;G.correct++;G.streak++;
+    G.sesC[q.s]=(G.sesC[q.s]||0)+1;
+    if(G.streak>G.maxStreak)G.maxStreak=G.streak;
+    sndCorrect();if(G.streak>=3)streakFx();
+    setFb(true,'✅ Correct! '+q.e);
+  }else{
+    btns[i].classList.add('wrong');btns[q.a].classList.add('reveal');
+    G.wrong++;G.streak=0;sndWrong();setFb(false,'❌ '+q.e);
+  }
+  document.getElementById('h-score').textContent=G.score;
+  push();showNxt();
+}
+function setFb(ok,txt){const el=document.getElementById('fb');el.textContent=txt;el.className='fb on '+(ok?'ok':'no')}
+function showNxt(){document.getElementById('nxt-w').className='nxt-w on';document.getElementById('lb-sect').style.display='block'}
+function nextQ(){G.cur++;G.cur>=QS.length?showResult():renderQ()}
+function streakFx(){sndStreak();const m={3:'🔥 3 in a row!',5:'⚡ 5 streak!',7:'🚀 7 on fire!',10:'👑 Perfect 10!',15:'🌟 Unstoppable!',20:'💎 Flawless!'};toast(m[G.streak]||`🔥 ${G.streak} in a row!`)}
+
+/* ── FIREBASE SYNC ── */
+function push(done=false){
+  if(!G.fbOk||!pRef)return;
+  pRef.update({score:G.score,correct:G.correct,done,name:G.name,avatar:G.avatar});
+}
+function listenLB(){
+  psRef.on('value',snap=>{
+    const d=snap.val()||{};
+    const sorted=Object.entries(d).map(([k,v])=>({...v,uid:k})).sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,6);
+    const max=sorted[0]?.score||1;
+    document.getElementById('lb-count').textContent=Object.keys(d).length+' players';
+    document.getElementById('live-lb').innerHTML=sorted.map((p,i)=>`
+      <div class="lb-row${p.uid===G.uid?' me':''}">
+        <div class="lb-rank">${rs(i)}</div>
+        <div class="lb-av">${p.avatar}</div>
+        <div class="lb-name">${esc(p.name)}${p.uid===G.uid?` <span style="color:var(--cyan);font-size:10px">(you)</span>`:''}</div>
+        <div class="lb-bar-track"><div class="lb-bar-fill" style="width:${Math.round((p.score||0)/max*100)}%"></div></div>
+        <div class="lb-pts">⭐${p.score||0}</div>
+      </div>`).join('');
+  });
+}
+
+/* ── RESULT ── */
+function showResult(){
+  clearInterval(G.tmr);push(true);if(G.fbOk)psRef.off();
+  const pct=Math.round(G.correct/QS.length*100),pass=pct>=70;
+  const avM={100:'💎',90:'🏆',80:'🥇',70:'🌟',60:'🥈',50:'🥉',0:'💪'};
+  let av='💪';for(const k of[100,90,80,70,60,50,0])if(pct>=k){av=avM[k];break}
+  document.getElementById('r-av').textContent=av;
+  document.getElementById('r-player').textContent=G.name;
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-lbl').textContent=`${G.correct} of ${QS.length} correct`;
+  const b=document.getElementById('r-badge');
+  b.textContent=pass?'PASSED — ISO 9001:2015 Aware':'Not passed — review and try again';
+  b.className='res-badge '+(pass?'r-pass':'r-fail');
+  document.getElementById('r-bk').innerHTML=`
+    <div class="bk-cell"><span class="bk-n cg">${G.correct}</span><div class="bk-l">Correct</div></div>
+    <div class="bk-cell"><span class="bk-n cr">${G.wrong+G.timeouts}</span><div class="bk-l">Wrong</div></div>
+    <div class="bk-cell"><span class="bk-n ca">${G.maxStreak}🔥</span><div class="bk-l">Best streak</div></div>`;
+  document.getElementById('r-ses').innerHTML=SESS.map(s=>{
+    const t=G.sesT[s]||1,c=G.sesC[s]||0,p=Math.round(c/t*100);
+    return `<div class="ses-row"><div class="ses-lbl">${s}</div><div class="ses-track"><div class="ses-fill" style="width:${p}%"></div></div><div class="ses-pct">${p}%</div></div>`;
+  }).join('');
+  document.getElementById('cert-wrap').innerHTML=pass?`
+    <div class="cert-card">
+      <div class="cert-title">🎓 Certificate of completion</div>
+      <div class="cert-sub">ISO 9001:2015 Awareness Training · Scienotech Sdn Bhd · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+      <div class="cert-score">${G.name} &nbsp;·&nbsp; ${pct}%</div>
+      <button class="cert-dl" onclick="dlCert()">Download certificate (SVG)</button>
+    </div>`:'';
+  show('s-result');if(pass)confetti();
+  if(G.fbOk){
+    psRef.once('value',snap=>{
+      const d=snap.val()||{};const sorted=Object.values(d).sort((a,b)=>(b.score||0)-(a.score||0));const max=sorted[0]?.score||1;
+      document.getElementById('r-lb').innerHTML=sorted.map((p,i)=>`
+        <div class="lb-row${p.name===G.name&&p.avatar===G.avatar?' me':''}">
+          <div class="lb-rank">${rs(i)}</div><div class="lb-av">${p.avatar}</div>
+          <div class="lb-name">${esc(p.name)}</div>
+          <div class="lb-bar-track"><div class="lb-bar-fill" style="width:${Math.round((p.score||0)/max*100)}%"></div></div>
+          <div class="lb-pts">⭐${p.score||0} · ${Math.round((p.correct||0)/QS.length*100)}%</div>
+        </div>`).join('')||'<div class="empty"><span>📡</span>No scores yet</div>';
+    });
+  }
+}
+
+/* ── CERTIFICATE ── */
+function dlCert(){
+  const pct=Math.round(G.correct/QS.length*100);
+  const dt=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#080B14"/><stop offset="100%" stop-color="#0F1520"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#0088AA"/></linearGradient></defs>
+<rect width="900" height="600" fill="url(#g1)"/>
+<rect x="0" y="0" width="900" height="6" fill="url(#g2)"/>
+<rect x="32" y="32" width="836" height="536" fill="none" stroke="#00D4FF" stroke-width=".5" opacity=".25"/>
+<rect x="38" y="38" width="824" height="524" fill="none" stroke="#00D4FF" stroke-width=".5" opacity=".12"/>
+<text x="450" y="105" font-family="sans-serif" font-size="11" font-weight="700" fill="#5A6A8A" text-anchor="middle" letter-spacing="4">SCIENOTECH SDN BHD</text>
+<text x="450" y="155" font-family="sans-serif" font-size="38" font-weight="800" fill="#F4F8FF" text-anchor="middle">Certificate of Completion</text>
+<rect x="200" y="175" width="500" height="2" fill="url(#g2)" opacity=".45"/>
+<text x="450" y="230" font-family="sans-serif" font-size="14" fill="#5A6A8A" text-anchor="middle">This certifies that</text>
+<text x="450" y="285" font-family="sans-serif" font-size="34" font-weight="700" fill="#00D4FF" text-anchor="middle">${esc(G.name)}</text>
+<text x="450" y="325" font-family="sans-serif" font-size="14" fill="#5A6A8A" text-anchor="middle">has successfully completed</text>
+<text x="450" y="372" font-family="sans-serif" font-size="22" font-weight="700" fill="#F4F8FF" text-anchor="middle">ISO 9001:2015 Awareness Training</text>
+<text x="450" y="408" font-family="sans-serif" font-size="14" fill="#5A6A8A" text-anchor="middle">with a score of ${pct}% · ${G.correct} of ${QS.length} correct</text>
+<rect x="200" y="430" width="500" height="1" fill="#ffffff0d"/>
+<text x="450" y="470" font-family="sans-serif" font-size="13" fill="#3A4A6A" text-anchor="middle">${dt}</text>
+<text x="450" y="555" font-family="sans-serif" font-size="10" fill="#2A3A5A" text-anchor="middle">ISO 9001:2015 Quality Management System · Scienotech Sdn Bhd Training Programme</text>
+</svg>`;
+  const a=document.createElement('a');a.href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  a.download=`Certificate_${G.name.replace(/\s+/g,'_')}_ISO9001.svg`;a.click();
+}
+
+/* ── HELPERS ── */
+function rs(i){return['🥇','🥈','🥉'][i]||(i+1)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),2500)}
+function confetti(){
+  const c=document.getElementById('confetti');c.innerHTML='';
+  const cols=['#00D4FF','#FFB020','#00E5A0','#FF4D6A','#a78bfa','#fcd34d','#fb923c'];
+  for(let i=0;i<100;i++){
+    const p=document.createElement('div');p.className='cp';
+    p.style.cssText=`left:${Math.random()*100}%;background:${cols[~~(Math.random()*cols.length)]};width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*1.5}s`;
+    c.appendChild(p);
+  }
+  setTimeout(()=>c.innerHTML='',5500);
+}
+function shareResult(){
+  const pct=Math.round(G.correct/QS.length*100);
+  const txt=`${G.avatar} ${G.name} scored ${pct}% on the ISO 9001:2015 Quiz!\n${G.correct}/20 correct · Best streak: ${G.maxStreak}🔥\n\nPlay here: ${window.location.href.split('?')[0]}`;
+  if(navigator.share)navigator.share({title:'ISO 9001:2015 Quiz',text:txt}).catch(()=>cpy(txt));
+  else cpy(txt);
+}
+function cpy(t){navigator.clipboard.writeText(t).then(()=>toast('📋 Copied!')).catch(()=>{})}
+function playAgain(){location.href=window.location.href.split('?')[0]}
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  // Check URL for admin param — must happen before anything else
+  if(checkUrlAdmin())return;
+
+  // Demo mode notice
+  const demo=FB.apiKey.includes('Demo')||FB.databaseURL.includes('your-project');
+  if(demo){
+    const n=document.createElement('div');n.className='setup-bar';
+    n.innerHTML=`<span>⚙️ <strong>Demo mode</strong> — paste your Firebase config to enable live sync. Quiz works offline now.</span><button class="setup-close" onclick="this.parentElement.remove()">✕</button>`;
+    document.body.appendChild(n);
+  }
+});
+</script>
+</body>
+</html>
