@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>ISO 9001:2015 — Quiz Arena · Scienotech</title>
+<title>ISO 9001:2015 — Quiz Arena · YHY Consultancy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --ink:#080B14;--card:#0F1520;--card2:#1A2235;--card3:#222D44;
-  --rim:#ffffff0d;--rim2:#ffffff18;
-  --cyan:#00D4FF;--cyan-dim:rgba(0,212,255,.13);--cyan-glow:rgba(0,212,255,.27);
-  --amber:#FFB020;--amber-dim:rgba(255,176,32,.13);
-  --green:#00E5A0;--green-dim:rgba(0,229,160,.13);
-  --red:#FF4D6A;--red-dim:rgba(255,77,106,.13);
-  --white:#F4F8FF;--muted:#5A6A8A;--muted2:#3A4A6A;--text:#E8EFFF;
+  --ink:#F0F4FF;--card:#FFFFFF;--card2:#EEF2FB;--card3:#E2E8F6;
+  --rim:rgba(30,60,140,.08);--rim2:rgba(30,60,140,.13);
+  --cyan:#1B4FD8;--cyan-dim:rgba(27,79,216,.1);--cyan-glow:rgba(27,79,216,.22);
+  --amber:#D97706;--amber-dim:rgba(217,119,6,.1);
+  --green:#059669;--green-dim:rgba(5,150,105,.1);
+  --red:#DC2626;--red-dim:rgba(220,38,38,.1);
+  --white:#0F172A;--muted:#475569;--muted2:#94A3B8;--text:#1E293B;
   --r:14px;--rsm:10px;
 }
 html{height:100%;-webkit-tap-highlight-color:transparent}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--ink);color:var(--text);min-height:100%;display:flex;align-items:flex-start;justify-content:center;overflow-x:hidden}
 .app{width:100%;max-width:480px;min-height:100dvh;position:relative;display:flex;flex-direction:column}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.035) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(0,212,255,.055) 0%,transparent 65%);pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(27,79,216,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(27,79,216,.04) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(27,79,216,.06) 0%,transparent 65%);pointer-events:none;z-index:0}
 
 /* screens */
 .scr{display:none;flex-direction:column;flex:1;padding:20px 18px 36px;position:relative;z-index:1;animation:rise .3s cubic-bezier(.22,.68,0,1.2)}
@@ -33,7 +33,7 @@ body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px
 /* topbar */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 0;position:relative;z-index:2}
 .tb-brand{display:flex;align-items:center;gap:7px}
-.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink 2s ease infinite}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px rgba(27,79,216,.5);animation:blink 2s ease infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 .tb-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
 .tb-pill{font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,176,32,.25);letter-spacing:.5px;text-transform:uppercase}
@@ -113,14 +113,14 @@ body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px
 .hud-pts{display:flex;align-items:center;gap:5px;background:var(--amber-dim);border:1px solid rgba(255,176,32,.2);border-radius:99px;padding:5px 12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--amber);flex-shrink:0}
 
 /* progress bar */
-.prog-track{height:3px;background:var(--card2);border-radius:99px;margin-bottom:18px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),#00AABB);transition:width .4s ease}
+.prog-track{height:3px;background:#CBD5E1;border-radius:99px;margin-bottom:18px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),#2563EB);transition:width .4s ease}
 
 /* timer ring */
 .timer-wrap{display:flex;justify-content:center;margin-bottom:18px}
 .timer-container{position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center}
 .timer-svg{position:absolute;inset:0;transform:rotate(-90deg)}
-.ring-track{fill:none;stroke:var(--card2);stroke-width:5}
+.ring-track{fill:none;stroke:#CBD5E1;stroke-width:5}
 .ring-prog{fill:none;stroke:var(--cyan);stroke-width:5;stroke-linecap:round;stroke-dasharray:219.9;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .3s}
 .ring-prog.urgent{stroke:var(--red)}
 .timer-num{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--white);line-height:1;position:relative;z-index:1;transition:color .3s}
@@ -170,8 +170,8 @@ body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px
 .lb-rank{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;width:20px;text-align:center;flex-shrink:0;color:var(--muted)}
 .lb-av{font-size:16px;flex-shrink:0}
 .lb-name{flex:1;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-bar-track{width:46px;height:3px;background:var(--card3);border-radius:99px;overflow:hidden;flex-shrink:0}
-.lb-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#00AABB);border-radius:99px;transition:width .5s ease}
+.lb-bar-track{width:46px;height:3px;background:#CBD5E1;border-radius:99px;overflow:hidden;flex-shrink:0}
+.lb-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#2563EB);border-radius:99px;transition:width .5s ease}
 .lb-pts{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--amber);flex-shrink:0;min-width:42px;text-align:right}
 
 /* result */
@@ -193,8 +193,8 @@ body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px
 .ses-wrap{margin-bottom:18px}
 .ses-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .ses-lbl{font-size:11px;color:var(--muted);min-width:62px;text-align:right;flex-shrink:0}
-.ses-track{flex:1;height:5px;background:var(--card2);border-radius:99px;overflow:hidden}
-.ses-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#00AABB);border-radius:99px}
+.ses-track{flex:1;height:5px;background:#CBD5E1;border-radius:99px;overflow:hidden}
+.ses-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#2563EB);border-radius:99px}
 .ses-pct{font-size:11px;color:var(--muted2);min-width:26px;text-align:right;flex-shrink:0;font-weight:600}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
 
@@ -244,7 +244,7 @@ body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px
   <div class="topbar">
     <div class="tb-brand">
       <div class="tb-dot"></div>
-      <div class="tb-name">Scienotech</div>
+      <div class="tb-name">YHY Consultancy</div>
     </div>
     <div class="tb-pill" id="tb-pill">ISO 9001:2015</div>
   </div>
@@ -432,13 +432,14 @@ body::after{content:'';position:fixed;top:-25%;left:50%;width:560px;height:560px
    3. Project Settings → Your apps → Add Web app → copy config here
 ───────────────────────────────────────────── */
 const FB = {
-  apiKey:"AIzaSyDemo-ReplaceWithYourKey",
-  authDomain:"your-project.firebaseapp.com",
-  databaseURL:"https://your-project-default-rtdb.firebaseio.com",
-  projectId:"your-project",
-  storageBucket:"your-project.appspot.com",
-  messagingSenderId:"000000000000",
-  appId:"1:000000000000:web:demo"
+  apiKey:"AIzaSyBgXoFIYtKwbWTDzO16Ngz2PSAYmGN4esg",
+  authDomain:"is09001-quiz-yhy.firebaseapp.com",
+  databaseURL:"https://is09001-quiz-yhy-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"is09001-quiz-yhy",
+  storageBucket:"is09001-quiz-yhy.firebasestorage.app",
+  messagingSenderId:"990497673756",
+  appId:"1:990497673756:web:049e4543bb3c2d979685d9",
+  measurementId:"G-048X3PW5EX"
 };
 
 /* ─────────────────────────────────────────────
@@ -645,7 +646,7 @@ function exportHTML(){
       const pct=Math.round((p.correct||0)/QS.length*100);
       return `<tr><td>${i+1}</td><td>${p.avatar} ${esc(p.name)}</td><td>${p.score||0}</td><td>${pct}%</td><td>${pct>=70?'✅ Pass':'❌ Fail'}</td></tr>`;
     }).join('');
-    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ISO 9001:2015 Quiz Results</title><style>body{font-family:sans-serif;padding:32px;background:#f8f9fa}h1{font-size:22px;margin-bottom:4px}p{color:#666;margin-bottom:24px}table{width:100%;border-collapse:collapse}th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e0e0e0}th{background:#f1f3f5;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#555}tr:hover td{background:#f8f8f8}@media print{body{padding:16px}}</style></head><body><h1>ISO 9001:2015 Quiz — Results</h1><p>Scienotech Sdn Bhd &nbsp;·&nbsp; ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><table><thead><tr><th>#</th><th>Name</th><th>Score</th><th>%</th><th>Result</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ISO 9001:2015 Quiz Results</title><style>body{font-family:sans-serif;padding:32px;background:#f8f9fa}h1{font-size:22px;margin-bottom:4px}p{color:#666;margin-bottom:24px}table{width:100%;border-collapse:collapse}th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e0e0e0}th{background:#f1f3f5;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#555}tr:hover td{background:#f8f8f8}@media print{body{padding:16px}}</style></head><body><h1>ISO 9001:2015 Quiz — Results</h1><p>YHY Consultancy &nbsp;·&nbsp; ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</p><table><thead><tr><th>#</th><th>Name</th><th>Score</th><th>%</th><th>Result</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
     const a=document.createElement('a');a.href='data:text/html;charset=utf-8,'+encodeURIComponent(html);a.download='ISO9001_Leaderboard.html';a.click();
   })
 }
@@ -779,7 +780,7 @@ function showResult(){
   document.getElementById('cert-wrap').innerHTML=pass?`
     <div class="cert-card">
       <div class="cert-title">🎓 Certificate of completion</div>
-      <div class="cert-sub">ISO 9001:2015 Awareness Training · Scienotech Sdn Bhd · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+      <div class="cert-sub">ISO 9001:2015 Awareness Training · YHY Consultancy · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
       <div class="cert-score">${G.name} &nbsp;·&nbsp; ${pct}%</div>
       <button class="cert-dl" onclick="dlCert()">Download certificate (SVG)</button>
     </div>`:'';
@@ -803,21 +804,21 @@ function dlCert(){
   const pct=Math.round(G.correct/QS.length*100);
   const dt=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#080B14"/><stop offset="100%" stop-color="#0F1520"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#0088AA"/></linearGradient></defs>
-<rect width="900" height="600" fill="url(#g1)"/>
+<rect width="900" height="600" fill="#F4F8FF"/>
 <rect x="0" y="0" width="900" height="6" fill="url(#g2)"/>
 <rect x="32" y="32" width="836" height="536" fill="none" stroke="#00D4FF" stroke-width=".5" opacity=".25"/>
 <rect x="38" y="38" width="824" height="524" fill="none" stroke="#00D4FF" stroke-width=".5" opacity=".12"/>
-<text x="450" y="105" font-family="sans-serif" font-size="11" font-weight="700" fill="#5A6A8A" text-anchor="middle" letter-spacing="4">SCIENOTECH SDN BHD</text>
+<text x="450" y="105" font-family="sans-serif" font-size="11" font-weight="700" fill="#94A3B8" text-anchor="middle" letter-spacing="4">SCIENOTECH SDN BHD</text>
 <text x="450" y="155" font-family="sans-serif" font-size="38" font-weight="800" fill="#F4F8FF" text-anchor="middle">Certificate of Completion</text>
 <rect x="200" y="175" width="500" height="2" fill="url(#g2)" opacity=".45"/>
-<text x="450" y="230" font-family="sans-serif" font-size="14" fill="#5A6A8A" text-anchor="middle">This certifies that</text>
+<text x="450" y="230" font-family="sans-serif" font-size="14" fill="#94A3B8" text-anchor="middle">This certifies that</text>
 <text x="450" y="285" font-family="sans-serif" font-size="34" font-weight="700" fill="#00D4FF" text-anchor="middle">${esc(G.name)}</text>
-<text x="450" y="325" font-family="sans-serif" font-size="14" fill="#5A6A8A" text-anchor="middle">has successfully completed</text>
+<text x="450" y="325" font-family="sans-serif" font-size="14" fill="#94A3B8" text-anchor="middle">has successfully completed</text>
 <text x="450" y="372" font-family="sans-serif" font-size="22" font-weight="700" fill="#F4F8FF" text-anchor="middle">ISO 9001:2015 Awareness Training</text>
-<text x="450" y="408" font-family="sans-serif" font-size="14" fill="#5A6A8A" text-anchor="middle">with a score of ${pct}% · ${G.correct} of ${QS.length} correct</text>
+<text x="450" y="408" font-family="sans-serif" font-size="14" fill="#94A3B8" text-anchor="middle">with a score of ${pct}% · ${G.correct} of ${QS.length} correct</text>
 <rect x="200" y="430" width="500" height="1" fill="#ffffff0d"/>
-<text x="450" y="470" font-family="sans-serif" font-size="13" fill="#3A4A6A" text-anchor="middle">${dt}</text>
-<text x="450" y="555" font-family="sans-serif" font-size="10" fill="#2A3A5A" text-anchor="middle">ISO 9001:2015 Quality Management System · Scienotech Sdn Bhd Training Programme</text>
+<text x="450" y="470" font-family="sans-serif" font-size="13" fill="#64748B" text-anchor="middle">${dt}</text>
+<text x="450" y="555" font-family="sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">ISO 9001:2015 Quality Management System · YHY Consultancy Sdn Bhd</text>
 </svg>`;
   const a=document.createElement('a');a.href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
   a.download=`Certificate_${G.name.replace(/\s+/g,'_')}_ISO9001.svg`;a.click();
@@ -852,7 +853,7 @@ window.addEventListener('load',()=>{
   if(checkUrlAdmin())return;
 
   // Demo mode notice
-  const demo=FB.apiKey.includes('Demo')||FB.databaseURL.includes('your-project');
+  const demo=false; // Firebase configured
   if(demo){
     const n=document.createElement('div');n.className='setup-bar';
     n.innerHTML=`<span>⚙️ <strong>Demo mode</strong> — paste your Firebase config to enable live sync. Quiz works offline now.</span><button class="setup-close" onclick="this.parentElement.remove()">✕</button>`;
