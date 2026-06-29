@@ -52,6 +52,8 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
 .pill{font-size:11px;font-weight:600;padding:5px 12px;border-radius:99px;background:var(--card);border:1px solid var(--rim2);color:var(--text2)}
 .level-title{font-family:"Syne",sans-serif;font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;text-align:center}
 .level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.level-single{margin-bottom:16px}
+.level-single .lvl-card{cursor:default;pointer-events:none}
 .lvl-card{background:var(--card);border:2px solid var(--rim2);border-radius:var(--r);padding:14px 8px;text-align:center;cursor:pointer;transition:all .18s}
 .lvl-card:hover{border-color:var(--blue);transform:translateY(-2px)}
 .lvl-card.active{border-color:var(--blue);background:var(--bluedim)}
@@ -277,18 +279,16 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
       <div class="emblem">🏆</div>
       <div class="kicker">Quality Management · Live Quiz</div>
       <div class="splash-title">Quiz<br><em>Arena</em></div>
-      <div class="splash-sub">Real-time multiplayer · Randomised questions · 3 difficulty levels · Shareable certificate</div>
+      <div class="splash-sub">Real-time multiplayer · Randomised questions · ISO 9001 awareness · Shareable certificate</div>
       <div class="pills">
         <div class="pill">🔀 Randomised</div><div class="pill">⏱ 60s timer</div>
         <div class="pill">📊 Live board</div><div class="pill">🎓 Certificate</div>
       </div>
     </div>
     <div class="field"><label>Your name</label><input id="inp-name" type="text" placeholder="Enter your name..." maxlength="28" autocomplete="off"/></div>
-    <div class="level-title">Choose your level</div>
-    <div class="level-grid">
-      <div class="lvl-card lv1 active" onclick="selLevel(1,this)"><span class="li">🌱</span><span class="ln">Awareness</span><span class="ls">Basic concepts &amp; principles</span></div>
-      <div class="lvl-card lv2" onclick="selLevel(2,this)"><span class="li">⚡</span><span class="ln">Practitioner</span><span class="ls">Clauses &amp; implementation</span></div>
-      <div class="lvl-card lv3" onclick="selLevel(3,this)"><span class="li">🎯</span><span class="ln">Professional</span><span class="ls">Case studies &amp; audit logic</span></div>
+    <div class="level-title">Quiz level</div>
+    <div class="level-single">
+      <div class="lvl-card lv1 active"><span class="li">🌱</span><span class="ln">Awareness</span><span class="ls">Basic concepts &amp; principles</span></div>
     </div>
     <button class="btn btn-blue" id="btn-join" onclick="joinGame()">Enter the arena →</button>
     </div>
@@ -455,6 +455,8 @@ const ADMIN_PIN="9001";
 const TIMER_SEC=60;
 const HURRY_AT=12;
 const RING_LEN=219.9;
+const LEVEL=1;
+const LEVEL_NAME="Awareness";
 const SESS=["Session 1","Session 2","Session 3","Session 4","Session 5"];
 const AVATS=["🧑","👩","👨","🧑‍💼","👩‍💼","👨‍💼","🧑‍🔬","👩‍🔬","🦸","🦸‍♀️","🎯","⚡","🦊","🐯","🦁","🐼","🦅","🌟"];
 
@@ -604,9 +606,8 @@ function toggleComingSoon(){
   });
 }
 
-function buildQ(level){
-  const bank=level===1?L1:level===2?L2:L3;
-  const pool=shuffle(bank).slice(0,20);
+function buildQ(){
+  const pool=shuffle(L1).slice(0,20);
   return pool.map(q=>{const opts=[...q.o];const correct=opts[q.a];const sh=shuffle(opts);return{...q,o:sh,a:sh.indexOf(correct)};});
 }
 function playerBlocked(){return G.comingSoon&&!G.isAdmin}
@@ -621,12 +622,11 @@ function applyComingSoon(){
 
 function exportQuestionsDoc(){window.open("questions-discussion.html","_blank");toast("📖 Question bank opened — use Word or Print")}
 
-function selLevel(n,el){if(playerBlocked()){toast("Coming soon — not open yet");return}G.level=n;document.querySelectorAll(".lvl-card").forEach(c=>c.classList.remove("active"));el.classList.add("active")}
 function checkUrlAdmin(){const p=new URLSearchParams(window.location.search);if(p.get("trainer")===ADMIN_PIN){G.isAdmin=true;initFB();applyComingSoon();ensureGame(()=>showAdmin());return true}return false}
 function show(id){document.querySelectorAll(".scr").forEach(s=>s.classList.remove("on"));document.getElementById(id).classList.add("on");window.scrollTo(0,0)}
 
 function applyPlayer(p,uid){
-  G.uid=uid;G.name=p.name||"";G.avatar=p.avatar||"🧑";G.level=p.level||1;G.sessionId=p.sessionId||"";
+  G.uid=uid;G.name=p.name||"";G.avatar=p.avatar||"🧑";G.level=LEVEL;G.sessionId=p.sessionId||"";
   G.joined=p.joined||0;G.cur=p.cur||0;G.score=p.score||0;G.streak=p.streak||0;G.maxStreak=p.maxStreak||0;
   G.correct=p.correct||0;G.wrong=p.wrong||0;G.timeouts=p.timeouts||0;G.questions=p.questions||[];
   G.sesC=p.sesC||{};G.sesT=p.sesT||{};G.answers=p.answers||[];
@@ -686,7 +686,7 @@ function joinGame(){
   const name=document.getElementById("inp-name").value.trim();
   if(!name){document.getElementById("inp-name").focus();return}
   ac();sndJoin();initFB();
-  if(!G.fbOk){G.name=name;G.questions=buildQ(G.level);SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});show("s-quiz");startQuiz();return}
+  if(!G.fbOk){G.name=name;G.level=LEVEL;G.questions=buildQ();SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});show("s-quiz");startQuiz();return}
   ensureGame(game=>{
     if(!game)return;
     G.sessionId=game.sessionId;
@@ -695,7 +695,7 @@ function joinGame(){
       return;
     }
     G.name=name;G.uid=mkUid();G.avatar=AVATS[~~(Math.random()*AVATS.length)];
-    G.joined=Date.now();G.questions=buildQ(G.level);G.answers=[];
+    G.level=LEVEL;G.joined=Date.now();G.questions=buildQ();G.answers=[];
     SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
     pRef=psRef.child(G.uid);
     pRef.set(playerPayload("waiting",false)).then(()=>{
@@ -706,9 +706,8 @@ function joinGame(){
 
 function showWaiting(reconnect){
   show("s-waiting");
-  const ln={1:"🌱 Awareness",2:"⚡ Practitioner",3:"🎯 Professional"};
   document.getElementById("w-greet").textContent="You're in, "+G.name+"!";
-  document.getElementById("w-lvl").textContent="Level: "+ln[G.level];
+  document.getElementById("w-lvl").textContent=LEVEL_NAME+" · ISO 9001:2015";
   document.getElementById("w-hint").textContent=reconnect?"Reconnecting… waiting for game sync":"Waiting for trainer to start…";
   if(G._waitP)psRef.off("value",G._waitP);
   if(G._waitG)gRef.off("value",G._waitG);
@@ -813,7 +812,7 @@ function rowsFromPlayers(d){
     const pct=Math.round((p.correct||0)/20*100);
     const prog=p.status==="done"||p.done?"20/20":(p.cur||0)+"/20";
     const st=p.status==="done"||p.done?"Done":p.status==="left"?"Left early":p.status==="playing"?"In progress":"Waiting";
-    rows.push([p.name,p.score||0,p.correct||0,pct+"%",getGrade(pct).label,["","Awareness","Practitioner","Professional"][p.level||1],st,prog]);
+    rows.push([p.name,p.score||0,p.correct||0,pct+"%",getGrade(pct).label,LEVEL_NAME,st,prog]);
   });
   return rows;
 }
@@ -857,8 +856,8 @@ function resetGame(){
 }
 
 function startQuiz(resume){
-  if(!resume){sndStart();G.cur=0;G.score=0;G.streak=0;G.maxStreak=0;G.correct=0;G.wrong=0;G.timeouts=0;G.answered=false;G.answers=[];SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});if(!G.questions.length)G.questions=buildQ(G.level)}
-  else{if(!G.questions.length){toast("Could not restore — starting fresh");G.questions=buildQ(G.level)}toast("▶ Resumed at Q"+(G.cur+1))}
+  if(!resume){sndStart();G.cur=0;G.score=0;G.streak=0;G.maxStreak=0;G.correct=0;G.wrong=0;G.timeouts=0;G.answered=false;G.answers=[];SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});if(!G.questions.length)G.questions=buildQ()}
+  else{if(!G.questions.length){toast("Could not restore — starting fresh");G.questions=buildQ()}toast("▶ Resumed at Q"+(G.cur+1))}
   if(pRef)setupDisconnect();
   renderQ();if(G.fbOk){listenLB();savePlayer()}
 }
@@ -873,8 +872,7 @@ function renderQ(){
   const q=G.questions[G.cur];G.answered=false;G.sesT[q.s]=(G.sesT[q.s]||0)+1;
   document.getElementById("h-player").textContent=G.avatar+" "+G.name;
   document.getElementById("h-score").textContent=G.score;
-  const ln={1:"Awareness",2:"Practitioner",3:"Professional"},lc={1:"leasy",2:"lmed",3:"lhard"};
-  const hl=document.getElementById("h-lvl");hl.textContent=ln[G.level];hl.className="hud-lvl "+lc[G.level];
+  const hl=document.getElementById("h-lvl");hl.textContent=LEVEL_NAME;hl.className="hud-lvl leasy";
   document.getElementById("q-sess").textContent=q.s;
   document.getElementById("q-num").textContent="Q "+(G.cur+1)+" / 20";
   document.getElementById("prog-fill").style.width=(G.cur/20*100)+"%";
@@ -982,11 +980,11 @@ function showResult(restore){
   document.getElementById("r-av").textContent=av;
   document.getElementById("r-player").textContent=G.name;
   document.getElementById("r-pct").textContent=pct+"%";
-  document.getElementById("r-lbl").textContent=G.correct+" of 20 correct · "+["","Awareness","Practitioner","Professional"][G.level]+" level";
+  document.getElementById("r-lbl").textContent=G.correct+" of 20 correct · "+LEVEL_NAME+" level";
   const gb=document.getElementById("r-grade");gb.textContent=grade.emoji+" "+grade.label;gb.className="grade-badge "+grade.cls;
   document.getElementById("r-bk").innerHTML="<div class=\"bk-cell\"><span class=\"bk-n cg\">"+G.correct+"</span><div class=\"bk-l\">Correct</div></div><div class=\"bk-cell\"><span class=\"bk-n cr\">"+(G.wrong+G.timeouts)+"</span><div class=\"bk-l\">Wrong</div></div><div class=\"bk-cell\"><span class=\"bk-n ca\">"+G.maxStreak+"🔥</span><div class=\"bk-l\">Streak</div></div><div class=\"bk-cell\"><span class=\"bk-n cb\">"+G.score+"</span><div class=\"bk-l\">Points</div></div>";
   document.getElementById("r-ses").innerHTML=SESS.map(s=>{const t=G.sesT[s]||1,c=G.sesC[s]||0,p=Math.round(c/t*100);return"<div class=\"ses-row\"><div class=\"ses-lbl\">"+s+"</div><div class=\"ses-track\"><div class=\"ses-fill\" style=\"width:"+p+"%\"></div></div><div class=\"ses-pct\">"+p+"%</div></div>"}).join("");
-  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const lName=LEVEL_NAME;
   const dt=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
   document.getElementById("cert-wrap").innerHTML=pct>=70?"<div class=\"cert-card\"><div class=\"cert-label\">Certificate of Completion</div><div class=\"cert-name\">"+esc(G.name)+"</div><div class=\"cert-course\">ISO 9001:2015 "+lName+" · YHY Consultancy</div><div class=\"cert-score\">"+grade.emoji+" "+grade.label+" · "+pct+"% · "+dt+"</div><div class=\"cert-btns\"><button class=\"cert-btn cbdl\" onclick=\"dlCert()\">⬇ Download</button><button class=\"cert-btn cbsh\" onclick=\"shareCert()\">📤 Share</button></div></div>":"<div style=\"background:var(--reddim);border:1px solid rgba(220,38,38,.2);border-radius:var(--r);padding:14px 16px;text-align:center;margin-bottom:14px;font-size:13px;color:var(--red)\">Score 70% or above to unlock your certificate. You scored "+pct+"% — try again! 💪</div>";
   show("s-result");if(pct>=70&&!restore)fireConfetti();
@@ -1012,14 +1010,14 @@ function showReview(){
 
 function dlCert(){
   const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
-  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const lName=LEVEL_NAME;
   const dt=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
   const svg="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"900\" height=\"620\" viewBox=\"0 0 900 620\"><defs><linearGradient id=\"bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#0F172A\"/><stop offset=\"100%\" stop-color=\"#1E293B\"/></linearGradient><linearGradient id=\"ac\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#1B4FD8\"/><stop offset=\"100%\" stop-color=\"#2563EB\"/></linearGradient></defs><rect width=\"900\" height=\"620\" fill=\"url(#bg)\"/><rect x=\"0\" y=\"0\" width=\"900\" height=\"7\" fill=\"url(#ac)\"/><rect x=\"30\" y=\"30\" width=\"840\" height=\"560\" fill=\"none\" stroke=\"#1B4FD8\" stroke-width=\".5\" opacity=\".3\"/><text x=\"450\" y=\"100\" font-family=\"sans-serif\" font-size=\"11\" font-weight=\"700\" fill=\"rgba(255,255,255,.35)\" text-anchor=\"middle\" letter-spacing=\"4\">YHY CONSULTANCY SDN BHD</text><text x=\"450\" y=\"155\" font-family=\"sans-serif\" font-size=\"40\" font-weight=\"800\" fill=\"#F4F8FF\" text-anchor=\"middle\">Certificate of Completion</text><rect x=\"200\" y=\"175\" width=\"500\" height=\"2\" fill=\"url(#ac)\" opacity=\".5\"/><text x=\"450\" y=\"225\" font-family=\"sans-serif\" font-size=\"14\" fill=\"rgba(255,255,255,.45)\" text-anchor=\"middle\">This certifies that</text><text x=\"450\" y=\"285\" font-family=\"sans-serif\" font-size=\"36\" font-weight=\"700\" fill=\"#60A5FA\" text-anchor=\"middle\">"+esc(G.name)+"</text><text x=\"450\" y=\"330\" font-family=\"sans-serif\" font-size=\"14\" fill=\"rgba(255,255,255,.45)\" text-anchor=\"middle\">has successfully completed the</text><text x=\"450\" y=\"375\" font-family=\"sans-serif\" font-size=\"22\" font-weight=\"700\" fill=\"#F4F8FF\" text-anchor=\"middle\">ISO 9001:2015 "+lName+" Quiz</text><text x=\"450\" y=\"415\" font-family=\"sans-serif\" font-size=\"15\" fill=\"#FFB020\" text-anchor=\"middle\">"+grade.emoji+" "+grade.label+" · "+pct+"% · "+G.correct+"/20 correct</text><rect x=\"200\" y=\"440\" width=\"500\" height=\"1\" fill=\"rgba(255,255,255,.08)\"/><text x=\"450\" y=\"478\" font-family=\"sans-serif\" font-size=\"13\" fill=\"rgba(255,255,255,.3)\" text-anchor=\"middle\">"+dt+"</text><text x=\"450\" y=\"575\" font-family=\"sans-serif\" font-size=\"10\" fill=\"rgba(255,255,255,.2)\" text-anchor=\"middle\">ISO 9001:2015 Quality Management System · YHY Consultancy Sdn Bhd</text></svg>";
   const a=document.createElement("a");a.href="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);a.download="Certificate_"+G.name.replace(/\s+/g,"_")+"_ISO9001.svg";a.click();
 }
 function shareCert(){
   const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
-  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const lName=LEVEL_NAME;
   const txt="🎓 I just completed the ISO 9001:2015 "+lName+" Quiz!\n\n"+grade.emoji+" Grade: "+grade.label+" | Score: "+pct+"% ("+G.correct+"/20)\n🏆 Points: "+G.score+" | Best streak: "+G.maxStreak+"🔥\n\nCertificate by YHY Consultancy Sdn Bhd\n\nTake the quiz: "+window.location.href.split("?")[0];
   if(navigator.share)navigator.share({title:"ISO 9001:2015 Certificate",text:txt}).catch(()=>showShareMenu(txt));
   else showShareMenu(txt);
@@ -1035,7 +1033,7 @@ function showShareMenu(txt){
 }
 function quickShare(){
   const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
-  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const lName=LEVEL_NAME;
   const txt=grade.emoji+" "+G.name+" scored "+pct+"% ("+grade.label+") on ISO 9001:2015 "+lName+" Quiz!\n"+G.correct+"/20 · "+G.score+" pts · Streak: "+G.maxStreak+"🔥\n\nPlay: "+window.location.href.split("?")[0];
   if(navigator.share)navigator.share({title:"ISO 9001:2015 Quiz",text:txt}).catch(()=>showShareMenu(txt));
   else showShareMenu(txt);
