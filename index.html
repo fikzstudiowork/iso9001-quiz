@@ -244,6 +244,12 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
 .coming-soon-box .cs-badge{display:inline-block;font-family:"Syne",sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#FFB020;background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.35);border-radius:99px;padding:6px 14px;margin-bottom:10px}
 .coming-soon-box p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.55}
 .splash-locked{opacity:.45;pointer-events:none;user-select:none;filter:grayscale(.15)}
+.cs-toggle-card{background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cs-toggle-card p{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.45}
+.toggle-sw{width:52px;height:30px;border-radius:99px;border:none;background:#CBD5E1;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;padding:0}
+.toggle-sw.on{background:var(--green)}
+.toggle-knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:transform .2s}
+.toggle-sw.on .toggle-knob{transform:translateX(22px)}
 </style>
 </head>
 <body>
@@ -329,6 +335,13 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
     <div class="admin-hdr">
       <div class="admin-title">Dashboard</div>
       <div style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--reddim);color:var(--red);border:1px solid rgba(220,38,38,.25);letter-spacing:.5px;text-transform:uppercase">Admin</div>
+    </div>
+    <div class="cs-toggle-card">
+      <div>
+        <div class="sec-lbl" style="margin:0">Player access</div>
+        <p id="cs-toggle-desc">Loading…</p>
+      </div>
+      <button type="button" class="toggle-sw" id="cs-toggle" onclick="toggleComingSoon()" aria-label="Toggle quiz live for players"><span class="toggle-knob"></span></button>
     </div>
     <div class="field"><label>Session label (optional)</label><input id="a-session-label" type="text" placeholder="e.g. Batch 12 March 2026" maxlength="60" autocomplete="off"/></div>
     <div class="start-banner">
@@ -439,7 +452,6 @@ body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
 <script>
 const FB={apiKey:"AIzaSyBgXoFIYtKwbWTDzO16Ngz2PSAYmGN4esg",authDomain:"is09001-quiz-yhy.firebaseapp.com",databaseURL:"https://is09001-quiz-yhy-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"is09001-quiz-yhy",storageBucket:"is09001-quiz-yhy.firebasestorage.app",messagingSenderId:"990497673756",appId:"1:990497673756:web:049e4543bb3c2d979685d9"};
 const ADMIN_PIN="9001";
-const COMING_SOON=true;
 const TIMER_SEC=60;
 const HURRY_AT=12;
 const RING_LEN=219.9;
@@ -512,7 +524,7 @@ const L3=[
 
 let db=null,pRef=null,psRef=null,gRef=null,hRef=null;
 const LS_KEY="yhy_quiz_player";
-let G={name:"",uid:"",avatar:"",level:1,sessionId:"",joined:0,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:TIMER_SEC,sesC:{},sesT:{},answers:[],isAdmin:false,fbOk:false,questions:[],muted:false,hurryOn:false,hurryIv:null,_waitG:null,_waitP:null};
+let G={name:"",uid:"",avatar:"",level:1,sessionId:"",joined:0,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:TIMER_SEC,sesC:{},sesT:{},answers:[],isAdmin:false,fbOk:false,questions:[],muted:false,hurryOn:false,hurryIv:null,_waitG:null,_waitP:null,comingSoon:true,_csListen:false};
 let _ac=null,_hurryLast=0;
 
 function ac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
@@ -533,6 +545,7 @@ function initFB(){
     db=firebase.database();psRef=db.ref("quiz/players");gRef=db.ref("quiz/game");hRef=db.ref("quiz/history");G.fbOk=true;
     G.muted=localStorage.getItem("yhy_quiz_mute")==="1";
     document.getElementById("btn-mute").textContent=G.muted?"🔇":"🔊";
+    watchComingSoon();
   }catch(e){G.fbOk=false}
 }
 function mkUid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -545,14 +558,50 @@ function loadLocal(){try{return JSON.parse(localStorage.getItem(LS_KEY)||"null")
 function ensureGame(cb){
   if(!G.fbOk){if(cb)cb(null);return}
   gRef.transaction(cur=>{
-    if(!cur||!cur.sessionId)return{sessionId:mkSessionId(),started:false,startedAt:null,countdownEnd:null,label:""};
+    if(!cur||!cur.sessionId)return{sessionId:mkSessionId(),started:false,startedAt:null,countdownEnd:null,label:"",comingSoon:true};
     if(cur.started&&!cur.startedAt)cur.started=false;
+    if(!("comingSoon" in cur))cur.comingSoon=true;
     return cur;
   },(err,committed,snap)=>{
     const g=snap&&snap.val()?snap.val():null;
-    if(g)G.gameSessionId=g.sessionId;
+    if(g){G.gameSessionId=g.sessionId;setComingSoonState(g.comingSoon!==false)}
     if(cb)cb(g);
   },false);
+}
+
+function setComingSoonState(on){
+  G.comingSoon=!!on;
+  applyComingSoon();
+  updateAdminComingSoonUI();
+}
+
+function updateAdminComingSoonUI(){
+  const btn=document.getElementById("cs-toggle"),desc=document.getElementById("cs-toggle-desc");
+  if(!btn||!desc)return;
+  const live=!G.comingSoon;
+  btn.classList.toggle("on",live);
+  btn.setAttribute("aria-pressed",live?"true":"false");
+  desc.textContent=live?"✅ Quiz is LIVE — players can join":"🔒 Coming Soon — players cannot join yet";
+}
+
+function watchComingSoon(){
+  if(!G.fbOk||G._csListen)return;
+  gRef.on("value",snap=>{
+    const g=snap.val();
+    if(g&&"comingSoon" in g)setComingSoonState(g.comingSoon!==false);
+  });
+  G._csListen=true;
+}
+
+function toggleComingSoon(){
+  if(!G.fbOk){toast("Firebase not connected");return}
+  const next=!G.comingSoon;
+  gRef.transaction(cur=>{
+    if(!cur)return null;
+    return{...cur,comingSoon:next};
+  },(err,committed,snap)=>{
+    if(!err&&snap&&snap.val()){setComingSoonState(snap.val().comingSoon!==false);toast(next?"🔒 Coming Soon enabled":"✅ Quiz is now LIVE")}
+  });
 }
 
 function buildQ(level){
@@ -560,7 +609,7 @@ function buildQ(level){
   const pool=shuffle(bank).slice(0,20);
   return pool.map(q=>{const opts=[...q.o];const correct=opts[q.a];const sh=shuffle(opts);return{...q,o:sh,a:sh.indexOf(correct)};});
 }
-function playerBlocked(){return COMING_SOON&&!G.isAdmin}
+function playerBlocked(){return G.comingSoon&&!G.isAdmin}
 function applyComingSoon(){
   const on=playerBlocked();
   document.getElementById("coming-soon-banner").style.display=on?"block":"none";
@@ -712,7 +761,7 @@ function showAdmin(){
   document.getElementById("a-lnk-p").textContent=base;
   document.getElementById("a-lnk-a").textContent=base+"?trainer="+ADMIN_PIN;
   document.getElementById("a-qr").src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data="+encodeURIComponent(base);
-  initFB();loadHistory();
+  initFB();loadHistory();updateAdminComingSoonUI();
   psRef.on("value",snap=>{
     const d=snap.val()||{},ps=Object.values(d);
     const done=ps.filter(x=>x.status==="done"||x.done);
@@ -795,7 +844,8 @@ function resetGame(){
       const players=ps.val();const label=document.getElementById("a-session-label").value.trim()||game.label||("Session "+new Date().toLocaleDateString("en-GB"));
       const archive=()=>{
         const newSid=mkSessionId();
-        psRef.remove().then(()=>gRef.set({sessionId:newSid,started:false,startedAt:null,countdownEnd:null,label:""}));
+        const cs=game.comingSoon!==false;
+        psRef.remove().then(()=>gRef.set({sessionId:newSid,started:false,startedAt:null,countdownEnd:null,label:"",comingSoon:cs}));
         document.getElementById("a-session-label").value="";
         document.getElementById("a-lb").innerHTML='<div class="empty"><span>⏳</span>Waiting...</div>';
         loadHistory();toast("Session archived & reset");
@@ -1005,7 +1055,13 @@ window.addEventListener("beforeunload",e=>{
 });
 window.addEventListener("online",()=>document.getElementById("offline-banner").classList.remove("on"));
 window.addEventListener("offline",()=>document.getElementById("offline-banner").classList.add("on"));
-window.addEventListener("load",()=>{applyComingSoon();if(!checkUrlAdmin())tryReconnect()});
+window.addEventListener("load",()=>{
+  initFB();
+  ensureGame(()=>{
+    applyComingSoon();
+    if(!checkUrlAdmin())tryReconnect();
+  });
+});
 </script>
 </body>
 </html>
