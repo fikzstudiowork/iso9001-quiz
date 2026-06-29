@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ISO 9001:2015 Quiz Arena · YHY Consultancy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0F4FF;--card:#fff;--card2:#EEF2FB;--card3:#E2E8F6;
+  --rim:rgba(30,60,140,.09);--rim2:rgba(30,60,140,.15);
+  --blue:#1B4FD8;--blued:#1440B0;--bluedim:rgba(27,79,216,.1);--blueglow:rgba(27,79,216,.2);
+  --amber:#D97706;--amberdim:rgba(217,119,6,.1);
+  --green:#059669;--greendim:rgba(5,150,105,.1);
+  --red:#DC2626;--reddim:rgba(220,38,38,.1);
+  --purple:#7C3AED;--purpledim:rgba(124,58,237,.1);
+  --text:#0F172A;--text2:#475569;--text3:#94A3B8;
+  --r:14px;--rs:10px;
+}
+html{height:100%;-webkit-tap-highlight-color:transparent}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100%;display:flex;justify-content:center;overflow-x:hidden}
+.app{width:100%;max-width:480px;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(27,79,216,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(27,79,216,.035) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(27,79,216,.07),transparent 65%);pointer-events:none;z-index:0}
+.scr{display:none;flex-direction:column;flex:1;padding:20px 18px 40px;position:relative;z-index:1;animation:rise .3s cubic-bezier(.22,.68,0,1.2)}
+.scr.on{display:flex}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 0;position:relative;z-index:2}
+.tb-brand{display:flex;align-items:center;gap:7px}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blueglow);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.tb-name{font-family:"Syne",sans-serif;font-size:12px;font-weight:700;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
+.tb-pill{font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--amberdim);color:var(--amber);border:1px solid rgba(217,119,6,.25);letter-spacing:.5px;text-transform:uppercase}
+.tb-pill.trainer{background:var(--reddim);color:var(--red);border-color:rgba(220,38,38,.25)}
+.btn{width:100%;border:none;border-radius:var(--r);padding:15px;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s,opacity .12s;letter-spacing:.2px}
+.btn:active{transform:scale(.97)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--rim2);color:var(--text2);margin-top:8px}
+.field{margin-bottom:11px}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text2);margin-bottom:7px}
+.field input{width:100%;background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:14px 16px;color:var(--text);font-size:16px;font-family:"DM Sans",sans-serif;outline:none;transition:border-color .18s,box-shadow .18s;-webkit-appearance:none}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--bluedim)}
+.field input::placeholder{color:var(--text3)}
+.splash-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px 0 12px}
+.emblem{width:84px;height:84px;border-radius:22px;background:var(--card);border:1px solid var(--rim2);display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:20px;box-shadow:0 4px 20px var(--bluedim)}
+.kicker{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.splash-title{font-family:"Syne",sans-serif;font-size:clamp(28px,8vw,36px);font-weight:800;line-height:1.1;color:var(--text);margin-bottom:10px;letter-spacing:-1px}
+.splash-title em{color:var(--blue);font-style:normal}
+.splash-sub{font-size:13px;color:var(--text2);line-height:1.65;max-width:280px;margin-bottom:22px}
+.pills{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+.pill{font-size:11px;font-weight:600;padding:5px 12px;border-radius:99px;background:var(--card);border:1px solid var(--rim2);color:var(--text2)}
+.level-title{font-family:"Syne",sans-serif;font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;text-align:center}
+.level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.lvl-card{background:var(--card);border:2px solid var(--rim2);border-radius:var(--r);padding:14px 8px;text-align:center;cursor:pointer;transition:all .18s}
+.lvl-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.lvl-card.active{border-color:var(--blue);background:var(--bluedim)}
+.lvl-card .li{font-size:24px;display:block;margin-bottom:6px}
+.lvl-card .ln{font-family:"Syne",sans-serif;font-size:11px;font-weight:800;color:var(--text);display:block;margin-bottom:3px}
+.lvl-card .ls{font-size:10px;color:var(--text2);line-height:1.4}
+.lvl-card.lv1.active{border-color:var(--green);background:var(--greendim)}
+.lvl-card.lv2.active{border-color:var(--blue);background:var(--bluedim)}
+.lvl-card.lv3.active{border-color:var(--purple);background:var(--purpledim)}
+.adm-lnk{text-align:center;margin-top:16px}
+.adm-lnk a{font-size:12px;color:var(--text3);text-decoration:none;border-bottom:1px solid var(--text3);padding-bottom:1px}
+.stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat-box{background:var(--card);border:1px solid var(--rim);border-radius:var(--rs);padding:12px 8px;text-align:center}
+.stat-box .n{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:var(--blue);display:block}
+.stat-box .l{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.live-chip{display:inline-flex;align-items:center;gap:6px;background:var(--greendim);border:1px solid rgba(5,150,105,.25);border-radius:99px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--green)}
+.live-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.1s infinite}
+.mosaic{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin-bottom:18px}
+.p-chip{background:var(--card);border:1px solid var(--rim);border-radius:var(--rs);padding:11px 8px;text-align:center;animation:rise .25s ease}
+.p-chip .av{font-size:24px;display:block;margin-bottom:4px}
+.p-chip .nm{font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.admin-title{font-family:"Syne",sans-serif;font-size:22px;font-weight:800}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:9px}
+.link-card{background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:12px;transition:border-color .15s}
+.link-card:hover{border-color:var(--blue)}
+.link-url{flex:1;font-size:12px;color:var(--blue);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.link-cta{font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--rim);border-radius:6px;padding:4px 9px;flex-shrink:0}
+.start-banner{background:var(--bluedim);border:1px solid var(--blueglow);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.start-banner p{font-size:13px;color:var(--text);font-weight:500}
+.start-banner p strong{color:var(--blue)}
+.btn-start{background:var(--blue);color:#fff;border:none;border-radius:var(--rs);padding:10px 16px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
+.alb-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--rim);border-radius:var(--rs);margin-bottom:6px}
+.alb-rank{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;width:22px;text-align:center;color:var(--text2);flex-shrink:0}
+.r1{color:var(--amber)}.r2{color:#888}.r3{color:#A0825A}
+.alb-av{font-size:19px;flex-shrink:0}
+.alb-name{flex:1;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alb-sc{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;color:var(--amber);flex-shrink:0}
+.alb-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;flex-shrink:0}
+.tdone{background:var(--greendim);color:var(--green);border:1px solid rgba(5,150,105,.25)}
+.tplay{background:var(--amberdim);color:var(--amber);border:1px solid rgba(217,119,6,.2)}
+.ex-btn{width:100%;background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:13px 16px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;margin-bottom:7px;text-align:left;display:flex;align-items:center;gap:10px}
+.ex-btn:hover{background:var(--card2);color:var(--text)}
+.hud{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.hud-pl{flex:1;font-size:12px;font-weight:600;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hud-pts{display:flex;align-items:center;gap:5px;background:var(--amberdim);border:1px solid rgba(217,119,6,.2);border-radius:99px;padding:5px 12px;font-family:"Syne",sans-serif;font-size:13px;font-weight:800;color:var(--amber);flex-shrink:0}
+.hud-lvl{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;flex-shrink:0}
+.leasy{background:var(--greendim);color:var(--green);border:1px solid rgba(5,150,105,.25)}
+.lmed{background:var(--bluedim);color:var(--blue);border:1px solid var(--blueglow)}
+.lhard{background:var(--purpledim);color:var(--purple);border:1px solid rgba(124,58,237,.25)}
+.prog-track{height:3px;background:var(--card3);border-radius:99px;margin-bottom:16px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),#2563EB);transition:width .4s ease}
+.timer-wrap{display:flex;justify-content:center;margin-bottom:16px}
+.timer-container{position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center}
+.timer-svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:#CBD5E1;stroke-width:5}
+.ring-prog{fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round;stroke-dasharray:219.9;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .3s}
+.ring-prog.urgent{stroke:var(--red)}
+.timer-num{font-family:"Syne",sans-serif;font-size:21px;font-weight:800;color:var(--text);position:relative;z-index:1;transition:color .3s}
+.timer-num.urgent{color:var(--red)}
+.q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.q-sess-tag{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);background:var(--bluedim);border:1px solid var(--blueglow);border-radius:99px;padding:4px 11px}
+.q-num{font-size:12px;color:var(--text2);font-weight:600}
+.q-type-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;margin-bottom:8px;display:inline-block}
+.qtmc{background:var(--bluedim);color:var(--blue);border:1px solid var(--blueglow)}
+.qtcs{background:var(--purpledim);color:var(--purple);border:1px solid rgba(124,58,237,.2)}
+.q-text{font-family:"Syne",sans-serif;font-size:clamp(14px,4vw,18px);font-weight:700;line-height:1.38;color:var(--text);margin-bottom:8px}
+.q-case{background:var(--card2);border-left:3px solid var(--purple);border-radius:0 var(--rs) var(--rs) 0;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:14px;font-style:italic}
+.opts{display:grid;gap:9px;margin-bottom:14px}
+.opt{width:100%;background:var(--card);border:1.5px solid var(--rim2);border-radius:var(--r);padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left;color:var(--text);font-family:"DM Sans",sans-serif;transition:all .12s;position:relative;overflow:hidden}
+.opt:not(:disabled):hover{border-color:rgba(27,79,216,.35);background:var(--bluedim);transform:translateX(3px)}
+.opt:not(:disabled):active{transform:scale(.98)}
+.opt:disabled{cursor:default}
+.opt-k{width:33px;height:33px;border-radius:8px;background:var(--card2);border:1px solid var(--rim);display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:12px;font-weight:800;color:var(--text2);flex-shrink:0;transition:all .14s}
+.opt-t{font-size:13px;font-weight:500;line-height:1.4}
+.opt.correct{background:var(--greendim);border-color:var(--green)}
+.opt.correct .opt-k{background:var(--green);border-color:var(--green);color:#fff}
+.opt.wrong{background:var(--reddim);border-color:var(--red)}
+.opt.wrong .opt-k{background:var(--red);border-color:var(--red);color:#fff}
+.opt.reveal{background:rgba(5,150,105,.06);border-color:rgba(5,150,105,.35)}
+.opt.reveal .opt-k{background:rgba(5,150,105,.2);color:var(--green)}
+.fb{background:var(--card);border-radius:var(--r);padding:13px 15px;font-size:12px;line-height:1.65;color:var(--text2);display:none;animation:rise .2s ease;border-left:3px solid var(--rim2);margin-bottom:13px}
+.fb.on{display:block}
+.fb.ok{border-color:var(--green);color:#065f46;background:var(--greendim)}
+.fb.no{border-color:var(--red);color:#991b1b;background:var(--reddim)}
+.nxt-w{display:none}
+.nxt-w.on{display:block}
+.lb-sect{margin-top:6px}
+.lb-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lb-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2)}
+.lb-count{font-size:11px;color:var(--text3)}
+.lb-row{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--card);border:1px solid var(--rim);border-radius:var(--rs);margin-bottom:5px;transition:all .3s}
+.lb-row.me{border-color:var(--blue);background:var(--bluedim)}
+.lb-rank{font-family:"Syne",sans-serif;font-size:11px;font-weight:800;width:20px;text-align:center;flex-shrink:0;color:var(--text2)}
+.lb-av{font-size:16px;flex-shrink:0}
+.lb-name{flex:1;font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-bar-track{width:46px;height:3px;background:var(--card3);border-radius:99px;overflow:hidden;flex-shrink:0}
+.lb-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#2563EB);border-radius:99px;transition:width .5s ease}
+.lb-pts{font-family:"Syne",sans-serif;font-size:12px;font-weight:800;color:var(--amber);flex-shrink:0;min-width:42px;text-align:right}
+.res-hero{text-align:center;padding:16px 0 20px}
+.res-av{font-size:60px;display:block;animation:pop .38s cubic-bezier(.175,.885,.32,1.275);margin-bottom:10px}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.res-player{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:3px}
+.res-pct{font-family:"Syne",sans-serif;font-size:clamp(56px,17vw,76px);font-weight:800;line-height:1;letter-spacing:-3px;color:var(--amber);margin-bottom:3px}
+.res-lbl{font-size:13px;color:var(--text2);margin-bottom:8px}
+.grade-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:99px;font-family:"Syne",sans-serif;font-size:14px;font-weight:800;margin-bottom:20px;border:2px solid}
+.gdist{background:var(--purpledim);color:var(--purple);border-color:var(--purple)}
+.gmerit{background:var(--bluedim);color:var(--blue);border-color:var(--blue)}
+.gpass{background:var(--greendim);color:var(--green);border-color:var(--green)}
+.gfail{background:var(--reddim);color:var(--red);border-color:var(--red)}
+.bk-grid{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--rim);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.bk-cell{padding:14px 6px;text-align:center;border-right:1px solid var(--rim)}
+.bk-cell:last-child{border-right:none}
+.bk-n{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;display:block;margin-bottom:2px}
+.bk-l{font-size:9px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.cg{color:var(--green)}.cr{color:var(--red)}.ca{color:var(--amber)}.cb{color:var(--blue)}
+.cert-card{background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:var(--r);padding:22px 20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden}
+.cert-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(27,79,216,.15),transparent 60%);pointer-events:none}
+.cert-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px}
+.cert-name{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}
+.cert-course{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px}
+.cert-score{font-family:"Syne",sans-serif;font-size:15px;font-weight:700;color:#FFB020;margin-bottom:16px}
+.cert-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cert-btn{padding:10px;border-radius:var(--rs);font-family:"DM Sans",sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:opacity .15s}
+.cbdl{background:#1B4FD8;color:#fff}
+.cbsh{background:#fff;color:#0F172A}
+.ses-wrap{margin-bottom:16px}
+.ses-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ses-lbl{font-size:11px;color:var(--text2);min-width:62px;text-align:right;flex-shrink:0}
+.ses-track{flex:1;height:5px;background:var(--card3);border-radius:99px;overflow:hidden}
+.ses-fill{height:100%;background:linear-gradient(90deg,var(--blue),#2563EB);border-radius:99px}
+.ses-pct{font-size:11px;color:var(--text3);min-width:26px;text-align:right;flex-shrink:0;font-weight:600}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.divider{height:1px;background:var(--rim);margin:14px 0}
+.empty{text-align:center;padding:20px 0;font-size:13px;color:var(--text3)}
+.empty span{display:block;font-size:26px;margin-bottom:7px}
+.seclbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:9px}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--amber);color:#fff;padding:9px 20px;border-radius:99px;font-family:"Syne",sans-serif;font-size:13px;font-weight:800;z-index:9999;transition:transform .36s cubic-bezier(.175,.885,.32,1.275);white-space:nowrap;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden}
+.cp{position:absolute;top:-12px;animation:fall linear forwards;border-radius:2px}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media(max-width:360px){.scr{padding:16px 13px 28px}.btn-row{grid-template-columns:1fr}.bk-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:480px){.app{border-left:1px solid var(--rim);border-right:1px solid var(--rim)}}
+</style>
+</head>
+<body>
+<div id="confetti"></div>
+<div id="toast" class="toast"></div>
+<div class="app">
+  <div class="topbar">
+    <div class="tb-brand"><div class="tb-dot"></div><div class="tb-name">YHY Consultancy</div></div>
+    <div class="tb-pill" id="tb-pill">ISO 9001:2015</div>
+  </div>
+
+  <!-- SPLASH -->
+  <div class="scr on" id="s-splash">
+    <div class="splash-hero">
+      <div class="emblem">🏆</div>
+      <div class="kicker">Quality Management · Live Quiz</div>
+      <div class="splash-title">Quiz<br><em>Arena</em></div>
+      <div class="splash-sub">Real-time multiplayer · Randomised questions · 3 difficulty levels · Shareable certificate</div>
+      <div class="pills">
+        <div class="pill">🔀 Randomised</div><div class="pill">⏱ 30s timer</div>
+        <div class="pill">📊 Live board</div><div class="pill">🎓 Certificate</div>
+      </div>
+    </div>
+    <div class="field"><label>Your name</label><input id="inp-name" type="text" placeholder="Enter your name..." maxlength="28" autocomplete="off"/></div>
+    <div class="level-title">Choose your level</div>
+    <div class="level-grid">
+      <div class="lvl-card lv1 active" onclick="selLevel(1,this)"><span class="li">🌱</span><span class="ln">Awareness</span><span class="ls">Basic concepts &amp; principles</span></div>
+      <div class="lvl-card lv2" onclick="selLevel(2,this)"><span class="li">⚡</span><span class="ln">Practitioner</span><span class="ls">Clauses &amp; implementation</span></div>
+      <div class="lvl-card lv3" onclick="selLevel(3,this)"><span class="li">🎯</span><span class="ln">Professional</span><span class="ls">Case studies &amp; audit logic</span></div>
+    </div>
+    <button class="btn btn-blue" onclick="joinGame()">Enter the arena →</button>
+    <div class="adm-lnk"><a href="#" onclick="showAdminLogin();return false">Trainer / admin →</a></div>
+  </div>
+
+  <!-- ADMIN LOGIN -->
+  <div class="scr" id="s-admin-login" style="justify-content:center">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:40px;margin-bottom:10px">🔐</div>
+      <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:5px">Trainer access</div>
+      <div style="font-size:13px;color:var(--text2)">PIN: 9001 &nbsp;or&nbsp; add ?trainer=9001 to URL</div>
+    </div>
+    <div class="field"><label>PIN</label><input id="inp-pin" type="password" placeholder="••••" maxlength="6" autocomplete="off" onkeydown="if(event.key==='Enter')checkPin()"/></div>
+    <button class="btn btn-blue" onclick="checkPin()">Open dashboard</button>
+    <button class="btn btn-ghost" onclick="show('s-splash')">← Back</button>
+  </div>
+
+  <!-- WAITING ROOM -->
+  <div class="scr" id="s-waiting">
+    <div style="text-align:center;padding:26px 0 18px">
+      <div style="font-size:36px;margin-bottom:10px">👋</div>
+      <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:5px" id="w-greet">You're in!</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px" id="w-lvl">Level selected</div>
+      <div class="live-chip"><div class="dot"></div>Live · <span id="w-count">0</span> joined</div>
+    </div>
+    <div class="seclbl" style="margin-top:8px">Players in the room</div>
+    <div class="mosaic" id="w-players"><div class="empty"><span>👀</span>No one yet</div></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="scr" id="s-admin">
+    <div class="admin-hdr">
+      <div class="admin-title">Dashboard</div>
+      <div style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--reddim);color:var(--red);border:1px solid rgba(220,38,38,.25);letter-spacing:.5px;text-transform:uppercase">Admin</div>
+    </div>
+    <div class="start-banner">
+      <p><strong id="start-count">0</strong> player(s) waiting</p>
+      <button class="btn-start" onclick="adminStart()">Start game →</button>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-box"><span class="n" id="a-joined">0</span><div class="l">Joined</div></div>
+      <div class="stat-box"><span class="n" id="a-done">0</span><div class="l">Done</div></div>
+      <div class="stat-box"><span class="n" id="a-pass">—</span><div class="l">Pass rate</div></div>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-box"><span class="n" id="a-avg">—</span><div class="l">Avg score</div></div>
+      <div class="stat-box"><span class="n" id="a-top">—</span><div class="l">Top score</div></div>
+      <div class="stat-box"><span class="n" id="a-avgp">—</span><div class="l">Avg %</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="sec-lbl">Player link — share this</div>
+    <div class="link-card" onclick="copyLink('player')"><div class="link-url" id="a-lnk-p">—</div><div class="link-cta">Copy</div></div>
+    <div class="sec-lbl">Admin link — keep private</div>
+    <div class="link-card" onclick="copyLink('admin')"><div class="link-url" id="a-lnk-a">—</div><div class="link-cta">Copy</div></div>
+    <div class="divider"></div>
+    <div class="sec-lbl">Live leaderboard</div>
+    <div id="a-lb"><div class="empty"><span>⏳</span>Waiting for players...</div></div>
+    <div class="divider"></div>
+    <button class="ex-btn" onclick="exportCSV()">📊 Export results as CSV</button>
+    <button class="ex-btn" onclick="exportHTML()">📋 Export leaderboard (printable)</button>
+    <button class="btn btn-ghost" style="color:var(--red);border-color:rgba(220,38,38,.2)" onclick="resetGame()">🗑 Reset session</button>
+    <button class="btn btn-ghost" onclick="show('s-splash')">← Home</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="scr" id="s-quiz">
+    <div class="hud">
+      <div class="hud-pl" id="h-player">—</div>
+      <div class="hud-lvl" id="h-lvl">Level</div>
+      <div class="hud-pts">⭐ <span id="h-score">0</span></div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="q-meta">
+      <div class="q-sess-tag" id="q-sess"></div>
+      <div class="q-num" id="q-num"></div>
+    </div>
+    <div class="q-type-tag" id="q-type-tag"></div>
+    <div class="timer-wrap">
+      <div class="timer-container">
+        <svg class="timer-svg" width="80" height="80" viewBox="0 0 80 80">
+          <circle class="ring-track" cx="40" cy="40" r="35"/>
+          <circle class="ring-prog" id="ring" cx="40" cy="40" r="35"/>
+        </svg>
+        <div class="timer-num" id="timer-num">30</div>
+      </div>
+    </div>
+    <div class="q-case" id="q-case" style="display:none"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <div class="nxt-w" id="nxt-w"><button class="btn btn-blue" id="btn-nxt" onclick="nextQ()">Next →</button></div>
+    <div class="lb-sect" id="lb-sect" style="display:none">
+      <div class="lb-hdr"><div class="lb-title">Live leaderboard</div><div class="lb-count" id="lb-count"></div></div>
+      <div id="live-lb"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="scr" id="s-result">
+    <div class="res-hero">
+      <span class="res-av" id="r-av">🎉</span>
+      <div class="res-player" id="r-player"></div>
+      <div class="res-pct" id="r-pct">0%</div>
+      <div class="res-lbl" id="r-lbl"></div>
+      <div class="grade-badge" id="r-grade"></div>
+    </div>
+    <div class="bk-grid" id="r-bk"></div>
+    <div class="divider"></div>
+    <div class="seclbl" style="margin-bottom:11px">Score by session</div>
+    <div class="ses-wrap" id="r-ses"></div>
+    <div id="cert-wrap"></div>
+    <div class="seclbl" style="margin-bottom:9px">Final leaderboard</div>
+    <div id="r-lb" style="margin-bottom:18px"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" style="margin-top:0" onclick="playAgain()">Play again</button>
+      <button class="btn btn-blue" onclick="quickShare()">Share result</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-database-compat.min.js"></script>
+<script>
+const FB={apiKey:"AIzaSyBgXoFIYtKwbWTDzO16Ngz2PSAYmGN4esg",authDomain:"is09001-quiz-yhy.firebaseapp.com",databaseURL:"https://is09001-quiz-yhy-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"is09001-quiz-yhy",storageBucket:"is09001-quiz-yhy.firebasestorage.app",messagingSenderId:"990497673756",appId:"1:990497673756:web:049e4543bb3c2d979685d9"};
+const ADMIN_PIN="9001";
+const SESS=["Session 1","Session 2","Session 3","Session 4","Session 5"];
+const AVATS=["🧑","👩","👨","🧑‍💼","👩‍💼","👨‍💼","🧑‍🔬","👩‍🔬","🦸","🦸‍♀️","🎯","⚡","🦊","🐯","🦁","🐼","🦅","🌟"];
+
+const L1=[
+  {s:"Session 1",t:"mc",q:"What is the primary purpose of ISO 9001:2015?",o:["To certify individual employees","To provide requirements for a Quality Management System","To regulate manufacturing processes only","To set financial auditing standards"],a:1,e:"ISO 9001:2015 specifies requirements for a QMS helping organisations consistently meet customer and regulatory requirements."},
+  {s:"Session 1",t:"mc",q:"How many quality management principles underpin ISO 9001:2015?",o:["5","6","7","8"],a:2,e:"ISO 9001:2015 is built on 7 principles: customer focus, leadership, engagement of people, process approach, improvement, evidence-based decision making, and relationship management."},
+  {s:"Session 1",t:"mc",q:"Which clause covers Leadership and Commitment?",o:["Clause 4","Clause 5","Clause 6","Clause 7"],a:1,e:"Clause 5 covers Leadership. Top management must demonstrate leadership and commitment to the QMS."},
+  {s:"Session 1",t:"mc",q:"What does context of the organisation (Clause 4) require?",o:["Determining headcount and budget","Identifying internal and external issues relevant to the QMS","Benchmarking competitors only","Measuring customer scores only"],a:1,e:"Clause 4 requires determining external and internal issues relevant to the organisation that affect QMS outcomes."},
+  {s:"Session 1",t:"mc",q:"Which is NOT one of the 7 QMS principles?",o:["Customer focus","Zero defect manufacturing","Engagement of people","Evidence-based decision making"],a:1,e:"Zero defect manufacturing is not a principle. The 7 are: customer focus, leadership, engagement of people, process approach, improvement, evidence-based decision making, and relationship management."},
+  {s:"Session 2",t:"mc",q:"What does PDCA stand for in ISO 9001:2015?",o:["Produce, Deliver, Check, Adjust","Plan, Do, Check, Act","Plan, Deploy, Control, Audit","Process, Document, Certify, Assess"],a:1,e:"PDCA — Plan, Do, Check, Act — is a cyclical improvement method underpinning the entire structure of ISO 9001:2015."},
+  {s:"Session 2",t:"mc",q:"What concept was formally introduced in ISO 9001:2015 not in 2008?",o:["Internal audits","Risk-based thinking","Document control","Management review"],a:1,e:"Risk-based thinking replaced preventive action and requires identifying risks and opportunities affecting QMS outcomes."},
+  {s:"Session 2",t:"mc",q:"What does the process approach mean?",o:["Managing each department independently","Managing interrelated activities as a system","Following steps in linear order only","Outsourcing non-core processes"],a:1,e:"The process approach means managing interrelated activities as a system, contributing to efficiency and effectiveness."},
+  {s:"Session 3",t:"mc",q:"What does interested parties refer to in ISO 9001:2015?",o:["Shareholders and investors only","Persons or organisations affected by the organisation's decisions","Certified suppliers only","Internal employees only"],a:1,e:"Interested parties are persons or organisations that can affect, be affected by, or perceive themselves to be affected by a decision."},
+  {s:"Session 3",t:"mc",q:"Who is ultimately responsible for QMS effectiveness?",o:["Quality Manager only","External consultants","Top management","The certification body"],a:2,e:"ISO 9001:2015 places accountability on top management who must demonstrate leadership and take responsibility for QMS effectiveness."},
+  {s:"Session 4",t:"mc",q:"What does documented information cover in ISO 9001:2015?",o:["Only printed procedures","Both documents to maintain and records to retain","Only quality records","Documents approved by certifiers"],a:1,e:"Documented information replaced documents and records. It includes information to be maintained (documents) and retained (records)."},
+  {s:"Session 4",t:"mc",q:"What is the purpose of a management review?",o:["To approve product designs","To ensure the QMS remains suitable, adequate and effective","To conduct employee appraisals","To plan marketing activities"],a:1,e:"Management review (Clause 9.3) requires top management to review the QMS to ensure continuing suitability, adequacy, and effectiveness."},
+  {s:"Session 4",t:"mc",q:"Which clause covers Competence and Awareness?",o:["Clause 5","Clause 6","Clause 7","Clause 8"],a:2,e:"Clause 7 (Support) covers competence (7.2), awareness (7.3), communication (7.4), and documented information (7.5)."},
+  {s:"Session 5",t:"mc",q:"What is a corrective action in ISO 9001:2015?",o:["A preventive step before an issue","An action to eliminate the cause of a nonconformity","A routine quality check","A management review finding"],a:1,e:"Corrective action (Clause 10.2) eliminates the root cause of a nonconformity to prevent recurrence."},
+  {s:"Session 5",t:"mc",q:"What is continual improvement in ISO 9001:2015?",o:["Optional enhancement","Applies only to manufacturers","A core requirement to enhance QMS performance","Refers only to certification renewal"],a:2,e:"Continual improvement (Clause 10.3) is fundamental — organisations must improve suitability, adequacy, and effectiveness of the QMS."},
+  {s:"Session 5",t:"mc",q:"Which clause requires monitoring customer satisfaction?",o:["Clause 7","Clause 8","Clause 9","Clause 10"],a:2,e:"Clause 9 (Performance Evaluation) requires monitoring customer perception — how well needs and expectations have been fulfilled."},
+  {s:"Session 5",t:"mc",q:"What must be established as part of Clause 6 Planning?",o:["Profit targets and sales forecasts","Quality objectives and plans to achieve them","Employee appraisal methods","Customer feedback portals"],a:1,e:"Clause 6 requires quality objectives at relevant functions and levels with plans covering resources, timelines, and evaluation."},
+  {s:"Session 3",t:"mc",q:"What does Clause 8 Operations primarily address?",o:["Strategic planning and risk","Planning and control of production and service provision","Internal audit procedures","Employee training and competence"],a:1,e:"Clause 8 covers operational planning and control — designing, producing, and delivering products and services that meet requirements."},
+  {s:"Session 1",t:"mc",q:"What is the purpose of an internal audit under ISO 9001:2015?",o:["Prepare for certification renewal only","Determine if QMS conforms and is effectively implemented","Evaluate competitor practices","Replace management reviews"],a:1,e:"Internal audits (Clause 9.2) determine whether the QMS conforms to ISO 9001:2015 requirements and is effectively implemented."},
+  {s:"Session 2",t:"mc",q:"What is required when a nonconformity occurs under Clause 10.2?",o:["Immediate suspension of operations","React, evaluate, determine root cause, take corrective action","Report to certification body immediately","Issue a formal customer complaint"],a:1,e:"React to control it, evaluate need for corrective action, determine root cause, implement action, review effectiveness, update risk info."}
+];
+
+const L2=[
+  {s:"Session 1",t:"mc",q:"Which BEST describes risk-based thinking in ISO 9001:2015?",o:["Eliminating all risks from processes","Considering risks and opportunities when planning the QMS","Conducting risk assessments only for critical products","Applying risk tools only during management review"],a:1,e:"Risk-based thinking means considering risks and opportunities when establishing, implementing and improving the QMS — integrated throughout."},
+  {s:"Session 1",t:"mc",q:"What is the MINIMUM documented information required for internal audits per Clause 9.2?",o:["Audit programme only","Evidence of audit programme and audit results","Full procedures and all checklists","Signed statements from all auditees"],a:1,e:"Clause 9.2.2 requires retaining documented information as evidence of the audit programme implementation and the audit results."},
+  {s:"Session 2",t:"mc",q:"Which clause specifically requires determining the scope of the QMS?",o:["Clause 4.1","Clause 4.2","Clause 4.3","Clause 5.1"],a:2,e:"Clause 4.3 requires determining the boundaries and applicability of the QMS to establish its scope."},
+  {s:"Session 2",t:"mc",q:"An organisation outsources calibration. Under ISO 9001:2015 what must it do?",o:["Exclude calibration from QMS scope","Ensure control over externally provided processes","Simply audit the supplier annually","Only check calibration certificates on receipt"],a:1,e:"Clause 8.4 requires organisations to control externally provided processes — outsourcing does not remove responsibility for conformity."},
+  {s:"Session 3",t:"mc",q:"What distinguishes maintaining from retaining documented information?",o:["No practical difference","Maintaining = keep current (procedures); Retaining = keep as evidence (records)","Maintaining = digital; Retaining = paper","Retaining applies only to customer records"],a:1,e:"ISO 9001:2015 uses maintain for documents (living information) and retain for records (evidence of what happened, not to be altered)."},
+  {s:"Session 3",t:"mc",q:"Which BEST describes a quality objective?",o:["Any target set by top management","A measurable goal consistent with quality policy, relevant to conformity","A KPI defined by the certification body","Any improvement project target"],a:1,e:"Clause 6.2 requires quality objectives to be measurable, consistent with quality policy, relevant to conformity, and monitored."},
+  {s:"Session 4",t:"mc",q:"Under Clause 8.3 when can an organisation exclude Design and Development?",o:["When using only standard products","When the nature of products/services makes design requirements inapplicable","When top management decides it unnecessary","When the organisation has fewer than 50 employees"],a:1,e:"Design and development can only be excluded when it can be justified — for example, a company that only resells without any design activity."},
+  {s:"Session 4",t:"mc",q:"What does Clause 9.1.1 require regarding monitoring and measurement?",o:["Only customer satisfaction to be measured","Determining what to monitor, when, using what methods, and when to analyse","Measuring all processes using statistical methods","Monthly reporting of all KPIs to top management"],a:1,e:"Clause 9.1.1 requires determining what needs monitoring and measuring, the methods needed, when to perform and analyse results."},
+  {s:"Session 5",t:"mc",q:"How many stages are in the PDCA cycle as applied to ISO 9001:2015 structure?",o:["2 — Plan and Do","3 — Plan, Do, Check","4 — Plan, Do, Check, Act","5 — Plan, Design, Do, Check, Act"],a:2,e:"The 4-stage PDCA maps to ISO 9001:2015: Plan (Clauses 4-6), Do (Clause 8), Check (Clause 9), Act (Clause 10)."},
+  {s:"Session 5",t:"mc",q:"What is the key output of the management review process?",o:["Updated quality manual","Decisions and actions related to improvement opportunities and QMS changes","New certified products list","Employee performance ratings"],a:1,e:"Clause 9.3.3 requires management review outputs to include decisions and actions related to improvement opportunities and QMS changes."},
+  {s:"Session 1",t:"mc",q:"Which document is NO LONGER mandatory under ISO 9001:2015?",o:["Quality policy","Quality manual","Internal audit programme","Documented quality objectives"],a:1,e:"The quality manual is no longer mandatory in ISO 9001:2015. The standard replaced prescriptive requirements with flexible documented information."},
+  {s:"Session 2",t:"mc",q:"Clause 7.1.5 covers measuring resources. What does it require for traceability?",o:["All equipment must be ISO-certified","Calibrated equipment must be identified and protected from invalid adjustment","Only production equipment requires calibration","Calibration must be done by accredited third parties only"],a:1,e:"Clause 7.1.5.2 requires traceable measuring equipment to be calibrated at specified intervals, identified, and safeguarded from damage."},
+  {s:"Session 3",t:"mc",q:"Under supplier evaluation Clause 8.4, which criteria MUST be applied?",o:["Price and delivery time only","Ability to meet requirements, quality performance, and applicable criteria","ISO 9001 certification of suppliers","Geographic proximity to the organisation"],a:1,e:"Clause 8.4.1 requires evaluation and re-evaluation of external providers based on their ability to meet requirements."},
+  {s:"Session 4",t:"mc",q:"What must happen after corrective action is implemented Clause 10.2?",o:["The nonconformity is closed immediately","Effectiveness of corrective action must be reviewed","A new audit must be scheduled","The customer must be notified"],a:1,e:"Clause 10.2.1(e) requires reviewing the effectiveness of corrective actions taken — implementing action alone is not sufficient."},
+  {s:"Session 5",t:"mc",q:"What is the difference between a nonconformity and an observation in auditing?",o:["No difference — both are failures","Nonconformity = failure to meet a requirement; Observation = potential risk not yet a failure","Observation is more serious than nonconformity","Nonconformity applies only to products"],a:1,e:"A nonconformity is a defined failure to meet a requirement. An observation indicates a risk area that could become a nonconformity but has not yet."},
+  {s:"Session 1",t:"mc",q:"Clause 5.3 requires responsibilities to be communicated. To whom?",o:["Only to the management team","Throughout the organisation","Only in the quality manual","Only to those directly responsible"],a:1,e:"Clause 5.3 requires top management to assign, communicate, and ensure understanding of responsibilities throughout the organisation."},
+  {s:"Session 2",t:"mc",q:"When determining external issues Clause 4.1, which factor is MOST relevant?",o:["Number of meeting rooms available","Changes in applicable legislation or regulatory requirements","Internal staff turnover rate","Office layout and equipment"],a:1,e:"External issues include legal/regulatory changes, competitive environment, market conditions, and technological developments."},
+  {s:"Session 3",t:"mc",q:"What does customer focus as a QMS principle require beyond satisfying customers?",o:["Giving discounts to retain customers","Understanding current and future customer needs and striving to exceed expectations","Only handling complaints promptly","Conducting annual customer surveys"],a:1,e:"Customer focus requires consistently meeting requirements, understanding future needs, measuring satisfaction, and taking action to enhance it."},
+  {s:"Session 4",t:"mc",q:"Under Clause 8.5.4, what must be preserved as customer property?",o:["Only physical products received","All customer property including intellectual property and personal data","Only tools and equipment","Raw materials provided by customers"],a:1,e:"Clause 8.5.4 covers all customer property — physical, intellectual, personal data — requiring identification, verification, protection, and reporting of damage."},
+  {s:"Session 5",t:"mc",q:"Which statement about ISO 9001:2015 certification is CORRECT?",o:["Certification is mandatory to implement ISO 9001:2015","An organisation can implement ISO 9001:2015 without seeking certification","Only manufacturing companies can be certified","Certification lasts indefinitely once awarded"],a:1,e:"ISO 9001:2015 certification is voluntary. An organisation can implement the standard without third-party certification."}
+];
+
+const L3=[
+  {s:"Session 1",t:"cs",case:"A manufacturing company produces automotive components. During an internal audit, the auditor finds the quality policy has never been communicated to shop floor workers. The Quality Manager argues only management needs to understand the policy.",q:"Which clause is being violated and what is the most appropriate corrective action?",o:["Clause 5.2 — Post quality policy on notice boards and close the finding","Clause 5.1 — Retrain the Quality Manager on leadership","Clause 5.2 — Communicate quality policy to all persons, verify understanding, and make it available to interested parties","Clause 6.1 — Conduct a risk assessment on communication failures"],a:2,e:"Clause 5.2.2 requires the quality policy to be communicated and understood within the organisation. Posting it is insufficient — verified understanding is required."},
+  {s:"Session 2",t:"cs",case:"A certified software company receives a major contract to develop custom software. The project manager bypasses design and development controls (Clause 8.3) saying 'we use Agile so formal design review does not apply'.",q:"Is the project manager's position correct under ISO 9001:2015?",o:["Yes — Agile is inherently compliant with ISO 9001:2015","Yes — software development is excluded from Clause 8.3","No — Clause 8.3 applies but can be adapted; Agile sprints can serve as design reviews with proper documentation","No — Agile methodology is not permitted under ISO 9001:2015"],a:2,e:"Clause 8.3 applies to any organisation designing products or services. Sprint reviews, acceptance criteria, and retrospectives can satisfy design review, verification, and validation requirements with appropriate documented information."},
+  {s:"Session 3",t:"cs",case:"During a supplier audit, a procurement officer discovers a key supplier has been providing non-conforming materials for 6 months. The supplier blames their subcontractor. The organisation has no documented supplier evaluation records for 2 years.",q:"Which combination of clauses has been violated?",o:["Clause 8.4.1 only — evaluation records are missing","Clause 8.4.1 and 8.4.3 — no re-evaluation and no communication of requirements","Clause 8.4.1, 8.4.3, and 10.2 — no re-evaluation, no clear requirements, and no corrective action system","Clause 10.2 only — raise a corrective action"],a:2,e:"Multiple clauses violated: 8.4.1 (no re-evaluation for 2 years), 8.4.3 (requirements not adequately communicated), and 10.2 (no corrective action despite 6 months of nonconforming inputs). Systemic failure requires systemic corrective action."},
+  {s:"Session 4",t:"cs",case:"A hospital implements ISO 9001:2015. The external auditor raises a major nonconformity: the hospital cannot demonstrate it has identified all applicable statutory and regulatory requirements related to patient safety in its context analysis.",q:"Which clause was cited and what is the most comprehensive corrective action?",o:["Clause 4.1 — Update the context document to list all regulations","Clause 6.1 — Conduct a risk assessment on regulatory gaps","Clause 4.1 combined with 8.2.2 — update context analysis AND establish a process to identify, monitor, and update all applicable legal requirements","Clause 9.1 — Improve monitoring and measurement"],a:2,e:"Clause 4.1 requires determining external issues including regulatory requirements. Clause 8.2.2 requires determining applicable statutory requirements. The corrective action must establish a systematic process to capture, review, and communicate regulatory changes."},
+  {s:"Session 5",t:"cs",case:"An internal auditor reviews the calibration programme and finds: 15 instruments have no calibration records, a critical gauge has been used 3 months past its due date, and the calibration procedure has not been reviewed in 5 years.",q:"What is the CORRECT sequence of actions under ISO 9001:2015?",o:["Calibrate all instruments immediately and close the finding","Raise a minor nonconformity and schedule calibration","Raise a major nonconformity; quarantine the out-of-date gauge; assess validity of previous measurements; recalibrate; update the procedure","Only retrain the person responsible for calibration"],a:2,e:"Major nonconformity against Clause 7.1.5. Critical actions: quarantine the gauge, assess impact on products measured with it (Clause 7.1.5.2(b)), calibrate all instruments, review and update the procedure, determine root cause and implement corrective action."},
+  {s:"Session 1",t:"cs",case:"A food processing company is preparing for recertification. The Quality Manager presents a risk register created 3 years ago that has never been updated. Operations have changed significantly — new product lines, new suppliers, new markets.",q:"Which principle and clause does this MOST directly violate?",o:["Clause 6.1 only — risks must be periodically reviewed","Clause 4.1 and 6.1 — context changes must trigger risk register updates; risk is not a one-time exercise","Clause 9.3 — management review should have identified this gap","Clause 10.3 — continual improvement requires updated risk tools"],a:1,e:"Clause 4.1 requires monitoring and reviewing information about context. Clause 6.1 requires actions to address risks — this is a living process. When context changes significantly, the risk register must be updated."},
+  {s:"Session 2",t:"cs",case:"During a management review, top management notices customer complaints increased 40% over 6 months. The Quality Manager presents corrective actions for individual complaints but there is no trend analysis or systemic root cause investigation.",q:"What does ISO 9001:2015 require beyond individual corrective actions?",o:["Simply continue addressing individual complaints","Analyse complaint data for trends, determine systemic root causes, and implement system-level improvements","Only survey customers to understand their concerns","Immediately suspend production until complaints decrease"],a:1,e:"Clause 9.1.3 requires analysis and evaluation of monitoring data including identifying trends. A 40% increase signals a systemic issue requiring trend analysis, root cause investigation at system level, and improvement actions."},
+  {s:"Session 3",t:"cs",case:"A logistics company implementing ISO 9001:2015 decides to exclude Clause 8.3 (Design and Development) arguing they do not design products. However, they design complex delivery route optimisation systems and customised tracking software for clients.",q:"Is this exclusion valid?",o:["Yes — logistics companies never design products","Yes — software is not covered under Clause 8.3","No — designing delivery systems and custom software constitutes design and development; the exclusion is invalid","No — all clauses are mandatory without exception"],a:2,e:"Clause 4.3 permits exclusions only where requirements cannot be applied AND do not affect ability to provide conforming services. Designing route systems and custom software clearly constitutes design and development — the exclusion is invalid."},
+  {s:"Session 4",t:"cs",case:"An internal audit reveals quality objectives for the production department were set two years ago and all achieved. No new objectives have been set. The production manager says we already meet all targets, why set new ones.",q:"What does ISO 9001:2015 require in this situation?",o:["The production manager is correct — achieved objectives need not be replaced","Quality objectives should be updated only when major changes occur","New quality objectives must be set to drive continual improvement; achieving targets does not satisfy the continual improvement requirement","The audit finding should be closed since previous objectives were achieved"],a:2,e:"Clause 6.2 requires quality objectives to be updated as needed. Clause 10.3 requires continual improvement. Achieving objectives is a starting point — organisations must set new, more challenging objectives to demonstrate genuine continual improvement."},
+  {s:"Session 5",t:"cs",case:"A certification auditor finds competence records show all staff completed training 4 years ago with no subsequent evaluation of training effectiveness or skills reassessment despite new equipment and processes being introduced.",q:"Which clauses are affected and what is the auditor most likely to raise?",o:["Clause 7.2 minor — training records exist so the clause is satisfied","Clause 7.2 major — competence must be evaluated for effectiveness; records of new processes must be addressed","Clause 7.3 only — awareness training is missing","Clause 8.1 — operations planning is affected"],a:1,e:"Clause 7.2 requires determining necessary competence, ensuring persons are competent, evaluating effectiveness of actions, and retaining evidence. Having 4-year-old training records without effectiveness evaluation is a major nonconformity — competence must be maintained as the organisation changes."},
+  {s:"Session 1",t:"cs",case:"During a surveillance audit, the auditor finds the organisation has a well-documented QMS but employees on the shop floor cannot explain the quality policy or their contribution to quality objectives when interviewed.",q:"Which clauses are implicated and what corrective action addresses the root cause?",o:["Clause 5.2 only — communicate quality policy better","Clause 7.3 only — conduct awareness training","Clauses 5.2 and 7.3 — a systemic communication and awareness programme addressing root cause of why employees cannot articulate their role","Clause 8.1 — operations planning needs updating"],a:2,e:"Both Clause 5.2 (quality policy communicated and understood) and Clause 7.3 (awareness of quality policy, objectives, and contribution) are implicated. Root cause must be determined — likely inadequate communication channels and onboarding — and a systemic programme implemented."},
+  {s:"Session 2",t:"cs",case:"An organisation plans a significant expansion into a new market. The management team decides to update the quality policy and quality objectives but does not update the context analysis, risk register, or scope of the QMS.",q:"What ISO 9001:2015 requirement has been overlooked and what are the potential consequences?",o:["Nothing — quality policy and objectives updates are sufficient","Clause 4.1 and 4.3 — context analysis and scope must be reviewed when significant changes occur; the QMS may not address new risks","Clause 9.3 — management review must approve the expansion","Clause 6.1 — only risk assessment needs updating"],a:1,e:"Clause 4.1 requires monitoring and reviewing context. Clause 4.3 requires scope to reflect applicable products/services. Entering a new market changes external context, risks, interested parties, and potentially scope — all must be reviewed before the QMS can effectively govern the new operations."},
+  {s:"Session 3",t:"cs",case:"A nonconformity is raised because the organisation cannot provide evidence that customer requirements were reviewed and confirmed before accepting an order. The sales team argues this happens verbally and does not need documentation.",q:"Is the sales team correct? What does Clause 8.2.3 require?",o:["Yes — verbal review is acceptable if the team confirms it happened","No — Clause 8.2.3 requires retaining documented information on results of review and any new requirements","Yes — only complex orders require documented review","No — all requirements must be reviewed by the quality department only"],a:1,e:"Clause 8.2.3 requires reviewing customer requirements before committing to supply products/services AND retaining documented information on the results of the review and any new or changed requirements. Verbal review with no records does not satisfy this requirement."},
+  {s:"Session 4",t:"cs",case:"An organisation's customer audit team finds that the organisation tracks on-time delivery but has never measured customer satisfaction through surveys, feedback analysis, or any other method. The Quality Manager argues delivery performance is sufficient evidence.",q:"Does on-time delivery data alone satisfy Clause 9.1.2?",o:["Yes — on-time delivery directly reflects customer satisfaction","Yes — if no complaints are received, satisfaction can be assumed","No — Clause 9.1.2 requires monitoring customer perception specifically and organisations must determine methods to obtain that information","No — only formal surveys satisfy the clause"],a:2,e:"Clause 9.1.2 specifically requires monitoring customer perception — how customers perceive the organisation's products and services. This must be actively obtained through surveys, feedback, compliments, warranty data, or other methods. Absence of complaints does not constitute monitoring of perception."},
+  {s:"Session 5",t:"cs",case:"An organisation implements ISO 9001:2015 and achieves certification. Three years later during recertification, the auditor finds that while all documents are updated, the actual processes on the shop floor do not match the documented procedures, and staff follow their own informal methods.",q:"Which fundamental QMS failure does this represent and which clauses are violated?",o:["Clause 7.5 only — documented information is not controlled","Clauses 4.4, 7.5, and 8.1 — the QMS is documented but not implemented; processes are not controlled as planned","Clause 9.2 — internal audits should have caught this","Clause 5.1 — leadership has not demonstrated commitment"],a:1,e:"This represents a fundamental implementation failure. Clause 4.4 requires processes to be implemented and maintained as planned. Clause 8.1 requires control of planned processes. Clause 7.5 requires documented information to reflect actual practice. Certification based on paper compliance without actual implementation is a systemic failure requiring complete reassessment."}
+];
+
+let db=null,pRef=null,psRef=null,gRef=null;
+let G={name:"",uid:"",avatar:"",level:1,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:30,sesC:{},sesT:{},isAdmin:false,fbOk:false,questions:[]};
+
+let _ac=null;
+function ac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
+function tone(f,d,t="sine",v=.25){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type=t;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start();o.stop(c.currentTime+d)}catch(e){}}
+function sndJoin(){[330,440,550].forEach((f,i)=>setTimeout(()=>tone(f,.09,"square",.18),i*80))}
+function sndCorrect(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.08,"square",.2),i*65))}
+function sndWrong(){tone(200,.11,"sawtooth",.28);setTimeout(()=>tone(155,.18,"sawtooth",.22),120)}
+function sndTimeout(){tone(220,.08,"sawtooth",.2);setTimeout(()=>tone(170,.22,"sawtooth",.17),85)}
+function sndTick(){tone(900,.038,"square",.055)}
+function sndStreak(){[880,1047,1319,1760].forEach((f,i)=>setTimeout(()=>tone(f,.07,"square",.17),i*55))}
+function sndStart(){[261,329,392,523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,.09,"square",.2),i*85))}
+
+function initFB(){
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(FB);
+    db=firebase.database();psRef=db.ref("quiz/players");gRef=db.ref("quiz/game");G.fbOk=true;
+  }catch(e){G.fbOk=false}
+}
+function mkUid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function buildQ(level){
+  const bank=level===1?L1:level===2?L2:L3;
+  const pool=shuffle(bank).slice(0,20);
+  return pool.map(q=>{
+    const opts=[...q.o];const correct=opts[q.a];const sh=shuffle(opts);
+    return {...q,o:sh,a:sh.indexOf(correct)};
+  });
+}
+function selLevel(n,el){G.level=n;document.querySelectorAll(".lvl-card").forEach(c=>c.classList.remove("active"));el.classList.add("active")}
+function checkUrlAdmin(){const p=new URLSearchParams(window.location.search);if(p.get("trainer")===ADMIN_PIN){G.isAdmin=true;initFB();showAdmin();return true}return false}
+function show(id){document.querySelectorAll(".scr").forEach(s=>s.classList.remove("on"));document.getElementById(id).classList.add("on");window.scrollTo(0,0)}
+
+function joinGame(){
+  const name=document.getElementById("inp-name").value.trim();
+  if(!name){document.getElementById("inp-name").focus();return}
+  ac();sndJoin();
+  G.name=name;G.uid=mkUid();G.avatar=AVATS[~~(Math.random()*AVATS.length)];
+  G.questions=buildQ(G.level);SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
+  initFB();
+  if(G.fbOk){
+    pRef=psRef.child(G.uid);
+    pRef.set({name:G.name,avatar:G.avatar,score:0,correct:0,done:false,level:G.level,joined:Date.now()});
+    pRef.onDisconnect().remove();showWaiting();
+  }else{show("s-quiz");startQuiz()}
+}
+
+function showWaiting(){
+  show("s-waiting");
+  const ln={1:"🌱 Awareness",2:"⚡ Practitioner",3:"🎯 Professional"};
+  document.getElementById("w-greet").textContent="You\'re in, "+G.name+"!";
+  document.getElementById("w-lvl").textContent="Level: "+ln[G.level];
+  psRef.on("value",snap=>{
+    const d=snap.val()||{},ps=Object.values(d);
+    document.getElementById("w-count").textContent=ps.length;
+    document.getElementById("w-players").innerHTML=ps.length?ps.map(p=>"<div class=\"p-chip\"><span class=\"av\">"+p.avatar+"</span><div class=\"nm\">"+esc(p.name)+"</div></div>").join(""):"<div class=\"empty\"><span>👀</span>No one yet</div>";
+  });
+  gRef.on("value",snap=>{if(snap.val()?.started){psRef.off();gRef.off();show("s-quiz");startQuiz()}});
+}
+
+function showAdminLogin(){show("s-admin-login")}
+function checkPin(){
+  const p=document.getElementById("inp-pin").value.trim();
+  if(p===ADMIN_PIN){G.isAdmin=true;initFB();showAdmin()}
+  else{document.getElementById("inp-pin").value="";document.getElementById("inp-pin").placeholder="Wrong PIN…";sndWrong();setTimeout(()=>{document.getElementById("inp-pin").placeholder="••••"},2000)}
+}
+function showAdmin(){
+  show("s-admin");
+  document.getElementById("tb-pill").textContent="TRAINER";document.getElementById("tb-pill").classList.add("trainer");
+  const base=window.location.href.split("?")[0];
+  document.getElementById("a-lnk-p").textContent=base;
+  document.getElementById("a-lnk-a").textContent=base+"?trainer="+ADMIN_PIN;
+  initFB();
+  psRef.on("value",snap=>{
+    const d=snap.val()||{},ps=Object.values(d);
+    const done=ps.filter(x=>x.done),scores=done.map(x=>x.score||0);
+    const avgS=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+    const avgPct=done.length?Math.round(done.map(x=>(x.correct||0)/20*100).reduce((a,b)=>a+b,0)/done.length):null;
+    const topS=scores.length?Math.max(...scores):null;
+    const passR=done.length?Math.round(done.filter(x=>(x.correct||0)/20>=.7).length/done.length*100):null;
+    document.getElementById("a-joined").textContent=ps.length;
+    document.getElementById("a-done").textContent=done.length;
+    document.getElementById("a-pass").textContent=passR!==null?passR+"%":"—";
+    document.getElementById("a-avg").textContent=avgS!==null?avgS:"—";
+    document.getElementById("a-top").textContent=topS!==null?topS:"—";
+    document.getElementById("a-avgp").textContent=avgPct!==null?avgPct+"%":"—";
+    document.getElementById("start-count").textContent=ps.length;
+    const sorted=ps.sort((a,b)=>(b.score||0)-(a.score||0));
+    document.getElementById("a-lb").innerHTML=sorted.length?sorted.map((p,i)=>"<div class=\"alb-row\"><div class=\"alb-rank "+(i===0?"r1":i===1?"r2":i===2?"r3":"")+"\">" +rs(i)+"</div><div class=\"alb-av\">"+p.avatar+"</div><div class=\"alb-name\">"+esc(p.name)+"</div><div class=\"alb-sc\">⭐"+( p.score||0)+"</div><div class=\"alb-tag "+(p.done?"tdone":"tplay")+"\">"+( p.done?"Done":"Playing")+"</div></div>").join(""):"<div class=\"empty\"><span>⏳</span>Waiting for players...</div>";
+  });
+}
+function adminStart(){if(!G.fbOk){toast("Firebase not connected");return}gRef.set({started:true,at:Date.now()});toast("🚀 Game started!")}
+function copyLink(t){const b=window.location.href.split("?")[0];navigator.clipboard.writeText(t==="admin"?b+"?trainer="+ADMIN_PIN:b).then(()=>toast(t==="admin"?"🔐 Admin link copied!":"🔗 Player link copied!")).catch(()=>{})}
+function exportCSV(){
+  if(!G.fbOk){toast("Firebase not connected");return}
+  psRef.once("value",snap=>{
+    const d=snap.val()||{};
+    const rows=[["Name","Score","Correct","Percentage","Grade","Level","Status"]];
+    Object.values(d).forEach(p=>{const pct=Math.round((p.correct||0)/20*100);rows.push([p.name,p.score||0,p.correct||0,pct+"%",getGrade(pct).label,["","Awareness","Practitioner","Professional"][p.level||1],p.done?"Done":"In progress"])});
+    const blob=new Blob([rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n")],{type:"text/csv"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="YHY_ISO9001_Results.csv";a.click();
+  });
+}
+function exportHTML(){
+  if(!G.fbOk){toast("Firebase not connected");return}
+  psRef.once("value",snap=>{
+    const d=snap.val()||{};const sorted=Object.values(d).sort((a,b)=>(b.score||0)-(a.score||0));
+    const rows=sorted.map((p,i)=>{const pct=Math.round((p.correct||0)/20*100);const g=getGrade(pct);return"<tr><td>"+(i+1)+"</td><td>"+p.avatar+" "+esc(p.name)+"</td><td>"+(p.score||0)+"</td><td>"+pct+"%</td><td style=\"color:"+g.color+"\">"+g.label+"</td></tr>"}).join("");
+    const html="<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><title>YHY Results</title><style>body{font-family:sans-serif;padding:32px;background:#f8f9fa}h1{font-size:22px;margin-bottom:4px}p{color:#666;margin-bottom:24px}table{width:100%;border-collapse:collapse}th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #e0e0e0}th{background:#f1f3f5;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#555}</style></head><body><h1>ISO 9001:2015 Quiz Results</h1><p>YHY Consultancy · "+new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+"</p><table><thead><tr><th>#</th><th>Name</th><th>Score</th><th>%</th><th>Grade</th></tr></thead><tbody>"+rows+"</tbody></table></body></html>";
+    const a=document.createElement("a");a.href="data:text/html;charset=utf-8,"+encodeURIComponent(html);a.download="YHY_Leaderboard.html";a.click();
+  });
+}
+function resetGame(){if(!confirm("Reset entire session?"))return;db.ref("quiz").remove();document.getElementById("a-lb").innerHTML="<div class=\"empty\"><span>⏳</span>Waiting...</div>";toast("Session reset")}
+
+function startQuiz(){
+  sndStart();
+  G.cur=0;G.score=0;G.streak=0;G.maxStreak=0;G.correct=0;G.wrong=0;G.timeouts=0;G.answered=false;
+  SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
+  if(!G.questions.length)G.questions=buildQ(G.level);
+  renderQ();if(G.fbOk)listenLB();
+}
+function renderQ(){
+  const q=G.questions[G.cur];G.answered=false;G.sesT[q.s]=(G.sesT[q.s]||0)+1;
+  document.getElementById("h-player").textContent=G.avatar+" "+G.name;
+  document.getElementById("h-score").textContent=G.score;
+  const ln={1:"Awareness",2:"Practitioner",3:"Professional"};
+  const lc={1:"leasy",2:"lmed",3:"lhard"};
+  const hl=document.getElementById("h-lvl");hl.textContent=ln[G.level];hl.className="hud-lvl "+lc[G.level];
+  document.getElementById("q-sess").textContent=q.s;
+  document.getElementById("q-num").textContent="Q "+(G.cur+1)+" / 20";
+  document.getElementById("prog-fill").style.width=(G.cur/20*100)+"%";
+  const tt=document.getElementById("q-type-tag");
+  if(q.t==="cs"){tt.textContent="📋 Case study";tt.className="q-type-tag qtcs"}
+  else{tt.textContent="❓ Multiple choice";tt.className="q-type-tag qtmc"}
+  const ce=document.getElementById("q-case");
+  if(q.case){ce.style.display="block";ce.textContent=q.case}else{ce.style.display="none"}
+  document.getElementById("q-text").textContent=q.q;
+  const K=["A","B","C","D"];
+  document.getElementById("opts").innerHTML=q.o.map((o,i)=>"<button class=\"opt\" onclick=\"pick("+i+")\" ><div class=\"opt-k\">"+K[i]+"</div><div class=\"opt-t\">"+esc(o)+"</div></button>").join("");
+  document.getElementById("fb").className="fb";document.getElementById("nxt-w").className="nxt-w";
+  document.getElementById("btn-nxt").textContent=G.cur+1<20?"Next question →":"See results →";
+  document.getElementById("lb-sect").style.display="none";
+  setRing(30,false);startTmr();
+}
+function startTmr(){
+  G.timeLeft=30;clearInterval(G.tmr);
+  G.tmr=setInterval(()=>{G.timeLeft--;setRing(G.timeLeft,G.timeLeft<=8);document.getElementById("timer-num").textContent=G.timeLeft;if(G.timeLeft<=5&&G.timeLeft>0)sndTick();if(G.timeLeft<=0){clearInterval(G.tmr);autoEnd()}},1000);
+}
+function setRing(t,urgent){
+  const r=document.getElementById("ring");r.style.strokeDashoffset=219.9-(t/30)*219.9;r.className="ring-prog"+(urgent?" urgent":"");
+  const n=document.getElementById("timer-num");n.className="timer-num"+(urgent?" urgent":"");
+}
+function autoEnd(){
+  if(G.answered)return;G.answered=true;G.timeouts++;G.streak=0;sndTimeout();
+  const q=G.questions[G.cur];
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  document.querySelectorAll(".opt")[q.a].classList.add("reveal");
+  setFb(false,"⏰ Time\'s up! "+q.e);showNxt();
+}
+function pick(i){
+  if(G.answered)return;clearInterval(G.tmr);G.answered=true;
+  const q=G.questions[G.cur],btns=document.querySelectorAll(".opt");
+  btns.forEach(b=>b.disabled=true);
+  if(i===q.a){
+    btns[i].classList.add("correct");
+    const tb=Math.round((G.timeLeft/30)*50);
+    G.score+=100+tb;G.correct++;G.streak++;G.sesC[q.s]=(G.sesC[q.s]||0)+1;
+    if(G.streak>G.maxStreak)G.maxStreak=G.streak;
+    sndCorrect();if(G.streak>=3)streakFx();setFb(true,"✅ Correct! "+q.e);
+  }else{
+    btns[i].classList.add("wrong");btns[q.a].classList.add("reveal");G.wrong++;G.streak=0;sndWrong();setFb(false,"❌ "+q.e);
+  }
+  document.getElementById("h-score").textContent=G.score;push();showNxt();
+}
+function setFb(ok,txt){const el=document.getElementById("fb");el.textContent=txt;el.className="fb on "+(ok?"ok":"no")}
+function showNxt(){document.getElementById("nxt-w").className="nxt-w on";document.getElementById("lb-sect").style.display="block"}
+function nextQ(){G.cur++;G.cur>=20?showResult():renderQ()}
+function streakFx(){sndStreak();const m={3:"🔥 3 in a row!",5:"⚡ 5 streak!",7:"🚀 7 on fire!",10:"👑 Perfect 10!",15:"🌟 Unstoppable!",20:"💎 Flawless!"};toast(m[G.streak]||"🔥 "+G.streak+" in a row!")}
+function getGrade(pct){
+  if(pct>=90)return{label:"Distinction",emoji:"💎",cls:"gdist",color:"#7C3AED"};
+  if(pct>=75)return{label:"Merit",emoji:"🥇",cls:"gmerit",color:"#1B4FD8"};
+  if(pct>=70)return{label:"Pass",emoji:"✅",cls:"gpass",color:"#059669"};
+  return{label:"Not passed",emoji:"📚",cls:"gfail",color:"#DC2626"};
+}
+function push(done=false){if(!G.fbOk||!pRef)return;pRef.update({score:G.score,correct:G.correct,done,name:G.name,avatar:G.avatar,level:G.level})}
+function listenLB(){
+  psRef.on("value",snap=>{
+    const d=snap.val()||{};
+    const sorted=Object.entries(d).map(([k,v])=>({...v,uid:k})).sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,6);
+    const max=sorted[0]?.score||1;
+    document.getElementById("lb-count").textContent=Object.keys(d).length+" players";
+    document.getElementById("live-lb").innerHTML=sorted.map((p,i)=>"<div class=\"lb-row"+(p.uid===G.uid?" me":"")+"\"><div class=\"lb-rank\">"+rs(i)+"</div><div class=\"lb-av\">"+p.avatar+"</div><div class=\"lb-name\">"+esc(p.name)+(p.uid===G.uid?" <span style=\"color:var(--blue);font-size:10px\">(you)</span>":"")+"</div><div class=\"lb-bar-track\"><div class=\"lb-bar-fill\" style=\"width:"+Math.round((p.score||0)/max*100)+"%\"></div></div><div class=\"lb-pts\">⭐"+(p.score||0)+"</div></div>").join("");
+  });
+}
+function showResult(){
+  clearInterval(G.tmr);push(true);if(G.fbOk)psRef.off();
+  const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
+  const avM={100:"💎",90:"🏆",80:"🥇",70:"✅",60:"🥈",50:"🥉",0:"📚"};
+  let av="📚";for(const k of[100,90,80,70,60,50,0])if(pct>=k){av=avM[k];break}
+  document.getElementById("r-av").textContent=av;
+  document.getElementById("r-player").textContent=G.name;
+  document.getElementById("r-pct").textContent=pct+"%";
+  document.getElementById("r-lbl").textContent=G.correct+" of 20 correct · "+["","Awareness","Practitioner","Professional"][G.level]+" level";
+  const gb=document.getElementById("r-grade");gb.textContent=grade.emoji+" "+grade.label;gb.className="grade-badge "+grade.cls;
+  document.getElementById("r-bk").innerHTML="<div class=\"bk-cell\"><span class=\"bk-n cg\">"+G.correct+"</span><div class=\"bk-l\">Correct</div></div><div class=\"bk-cell\"><span class=\"bk-n cr\">"+(G.wrong+G.timeouts)+"</span><div class=\"bk-l\">Wrong</div></div><div class=\"bk-cell\"><span class=\"bk-n ca\">"+G.maxStreak+"🔥</span><div class=\"bk-l\">Streak</div></div><div class=\"bk-cell\"><span class=\"bk-n cb\">"+G.score+"</span><div class=\"bk-l\">Points</div></div>";
+  document.getElementById("r-ses").innerHTML=SESS.map(s=>{const t=G.sesT[s]||1,c=G.sesC[s]||0,p=Math.round(c/t*100);return"<div class=\"ses-row\"><div class=\"ses-lbl\">"+s+"</div><div class=\"ses-track\"><div class=\"ses-fill\" style=\"width:"+p+"%\"></div></div><div class=\"ses-pct\">"+p+"%</div></div>"}).join("");
+  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const dt=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("cert-wrap").innerHTML=pct>=70?"<div class=\"cert-card\"><div class=\"cert-label\">Certificate of Completion</div><div class=\"cert-name\">"+esc(G.name)+"</div><div class=\"cert-course\">ISO 9001:2015 "+lName+" · YHY Consultancy</div><div class=\"cert-score\">"+grade.emoji+" "+grade.label+" · "+pct+"% · "+dt+"</div><div class=\"cert-btns\"><button class=\"cert-btn cbdl\" onclick=\"dlCert()\">⬇ Download</button><button class=\"cert-btn cbsh\" onclick=\"shareCert()\">📤 Share</button></div></div>":"<div style=\"background:var(--reddim);border:1px solid rgba(220,38,38,.2);border-radius:var(--r);padding:14px 16px;text-align:center;margin-bottom:14px;font-size:13px;color:var(--red)\">Score 70% or above to unlock your certificate. You scored "+pct+"% — try again! 💪</div>";
+  show("s-result");if(pct>=70)fireConfetti();
+  if(G.fbOk){
+    psRef.once("value",snap=>{
+      const d=snap.val()||{};const sorted=Object.values(d).sort((a,b)=>(b.score||0)-(a.score||0));const max=sorted[0]?.score||1;
+      document.getElementById("r-lb").innerHTML=sorted.map((p,i)=>"<div class=\"lb-row"+(p.name===G.name&&p.avatar===G.avatar?" me":"")+"\"><div class=\"lb-rank\">"+rs(i)+"</div><div class=\"lb-av\">"+p.avatar+"</div><div class=\"lb-name\">"+esc(p.name)+"</div><div class=\"lb-bar-track\"><div class=\"lb-bar-fill\" style=\"width:"+Math.round((p.score||0)/max*100)+"%\"></div></div><div class=\"lb-pts\">⭐"+(p.score||0)+" · "+Math.round((p.correct||0)/20*100)+"%</div></div>").join("")||"<div class=\"empty\"><span>📡</span>No scores yet</div>";
+    });
+  }
+}
+function dlCert(){
+  const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
+  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const dt=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const svg="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"900\" height=\"620\" viewBox=\"0 0 900 620\"><defs><linearGradient id=\"bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#0F172A\"/><stop offset=\"100%\" stop-color=\"#1E293B\"/></linearGradient><linearGradient id=\"ac\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#1B4FD8\"/><stop offset=\"100%\" stop-color=\"#2563EB\"/></linearGradient></defs><rect width=\"900\" height=\"620\" fill=\"url(#bg)\"/><rect x=\"0\" y=\"0\" width=\"900\" height=\"7\" fill=\"url(#ac)\"/><rect x=\"30\" y=\"30\" width=\"840\" height=\"560\" fill=\"none\" stroke=\"#1B4FD8\" stroke-width=\".5\" opacity=\".3\"/><text x=\"450\" y=\"100\" font-family=\"sans-serif\" font-size=\"11\" font-weight=\"700\" fill=\"rgba(255,255,255,.35)\" text-anchor=\"middle\" letter-spacing=\"4\">YHY CONSULTANCY SDN BHD</text><text x=\"450\" y=\"155\" font-family=\"sans-serif\" font-size=\"40\" font-weight=\"800\" fill=\"#F4F8FF\" text-anchor=\"middle\">Certificate of Completion</text><rect x=\"200\" y=\"175\" width=\"500\" height=\"2\" fill=\"url(#ac)\" opacity=\".5\"/><text x=\"450\" y=\"225\" font-family=\"sans-serif\" font-size=\"14\" fill=\"rgba(255,255,255,.45)\" text-anchor=\"middle\">This certifies that</text><text x=\"450\" y=\"285\" font-family=\"sans-serif\" font-size=\"36\" font-weight=\"700\" fill=\"#60A5FA\" text-anchor=\"middle\">"+esc(G.name)+"</text><text x=\"450\" y=\"330\" font-family=\"sans-serif\" font-size=\"14\" fill=\"rgba(255,255,255,.45)\" text-anchor=\"middle\">has successfully completed the</text><text x=\"450\" y=\"375\" font-family=\"sans-serif\" font-size=\"22\" font-weight=\"700\" fill=\"#F4F8FF\" text-anchor=\"middle\">ISO 9001:2015 "+lName+" Quiz</text><text x=\"450\" y=\"415\" font-family=\"sans-serif\" font-size=\"15\" fill=\"#FFB020\" text-anchor=\"middle\">"+grade.emoji+" "+grade.label+" · "+pct+"% · "+G.correct+"/20 correct</text><rect x=\"200\" y=\"440\" width=\"500\" height=\"1\" fill=\"rgba(255,255,255,.08)\"/><text x=\"450\" y=\"478\" font-family=\"sans-serif\" font-size=\"13\" fill=\"rgba(255,255,255,.3)\" text-anchor=\"middle\">"+dt+"</text><text x=\"450\" y=\"575\" font-family=\"sans-serif\" font-size=\"10\" fill=\"rgba(255,255,255,.2)\" text-anchor=\"middle\">ISO 9001:2015 Quality Management System · YHY Consultancy Sdn Bhd</text></svg>";
+  const a=document.createElement("a");a.href="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);a.download="Certificate_"+G.name.replace(/\s+/g,"_")+"_ISO9001.svg";a.click();
+}
+function shareCert(){
+  const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
+  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const txt="🎓 I just completed the ISO 9001:2015 "+lName+" Quiz!\n\n"+grade.emoji+" Grade: "+grade.label+" | Score: "+pct+"% ("+G.correct+"/20)\n🏆 Points: "+G.score+" | Best streak: "+G.maxStreak+"🔥\n\nCertificate by YHY Consultancy Sdn Bhd\n\nTake the quiz: "+window.location.href.split("?")[0];
+  if(navigator.share)navigator.share({title:"ISO 9001:2015 Certificate",text:txt}).catch(()=>showShareMenu(txt));
+  else showShareMenu(txt);
+}
+function showShareMenu(txt){
+  const enc=encodeURIComponent(txt);
+  const url=window.location.href.split("?")[0];
+  const m=document.createElement("div");
+  m.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:20px";
+  m.innerHTML="<div style=\"background:#fff;border-radius:16px;padding:20px;width:100%;max-width:460px\"><div style=\"font-family:Syne,sans-serif;font-size:15px;font-weight:800;color:#0F172A;margin-bottom:14px\">Share your result</div><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px\"><a href=\"https://api.whatsapp.com/send?text="+enc+"\" target=\"_blank\" style=\"display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#25D366;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;font-weight:700\">💬 WhatsApp</a><a href=\"https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+enc+"\" target=\"_blank\" style=\"display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#2AABEE;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;font-weight:700\">✈️ Telegram</a><a href=\"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(url)+"\" target=\"_blank\" style=\"display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#0077B5;color:#fff;border-radius:10px;text-decoration:none;font-size:13px;font-weight:700\">💼 LinkedIn</a><button onclick=\"navigator.clipboard.writeText(decodeURIComponent('"+enc+"')).then(()=>{toast('📋 Copied!');document.body.querySelector('[style*=zIndex]').remove()})\" style=\"display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:#EEF2FB;color:#0F172A;border:1px solid #CBD5E1;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit\">📋 Copy</button></div><button onclick=\"this.closest('[style*=zIndex]').remove()\" style=\"width:100%;padding:12px;background:#F1F5F9;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#64748B;font-family:inherit\">Cancel</button></div>";
+  document.body.appendChild(m);
+  m.addEventListener("click",e=>{if(e.target===m)m.remove()});
+}
+function quickShare(){
+  const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
+  const lName=["","Awareness","Practitioner","Professional"][G.level];
+  const txt=grade.emoji+" "+G.name+" scored "+pct+"% ("+grade.label+") on ISO 9001:2015 "+lName+" Quiz!\n"+G.correct+"/20 · "+G.score+" pts · Streak: "+G.maxStreak+"🔥\n\nPlay: "+window.location.href.split("?")[0];
+  if(navigator.share)navigator.share({title:"ISO 9001:2015 Quiz",text:txt}).catch(()=>showShareMenu(txt));
+  else showShareMenu(txt);
+}
+function rs(i){return["🥇","🥈","🥉"][i]||(i+1)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),2500)}
+function fireConfetti(){
+  const c=document.getElementById("confetti");c.innerHTML="";
+  const cols=["#1B4FD8","#D97706","#059669","#DC2626","#7C3AED","#2563EB"];
+  for(let i=0;i<100;i++){const p=document.createElement("div");p.className="cp";p.style.cssText="left:"+Math.random()*100+"%;background:"+cols[~~(Math.random()*cols.length)]+";width:"+(4+Math.random()*8)+"px;height:"+(4+Math.random()*8)+"px;border-radius:"+(Math.random()>.5?"50%":"2px")+";animation-duration:"+(2+Math.random()*2.5)+"s;animation-delay:"+Math.random()*1.5+"s";c.appendChild(p)}
+  setTimeout(()=>c.innerHTML="",5500);
+}
+function playAgain(){location.href=window.location.href.split("?")[0]}
+window.addEventListener("load",()=>{if(!checkUrlAdmin()){}});
+</script>
+</body>
+</html>
