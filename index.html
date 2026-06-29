@@ -111,7 +111,49 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
 .ring-prog{fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round;stroke-dasharray:219.9;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .3s}
 .ring-prog.urgent{stroke:var(--red)}
 .timer-num{font-family:"Syne",sans-serif;font-size:21px;font-weight:800;color:var(--text);position:relative;z-index:1;transition:color .3s}
-.timer-num.urgent{color:var(--red)}
+.timer-num.urgent{color:#E52521}
+.timer-container.mario-hurry{animation:mario-bounce .45s ease-in-out infinite}
+.timer-num.mario-hurry{animation:mario-pulse .35s ease-in-out infinite;color:#E52521}
+@keyframes mario-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes mario-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.mario-sprite{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:18px;animation:mario-run 1s linear infinite;pointer-events:none;opacity:0;transition:opacity .2s}
+.mario-sprite.on{opacity:1}
+@keyframes mario-run{0%{transform:translateX(-50%) translateX(-14px)}50%{transform:translateX(-50%) translateX(14px)}100%{transform:translateX(-50%) translateX(-14px)}}
+body.hurry-vignette::after{background:radial-gradient(ellipse,rgba(229,37,33,.12),transparent 65%)}
+body.hurry-vignette{animation:vignette-pulse 1s ease-in-out infinite}
+@keyframes vignette-pulse{0%,100%{filter:none}50%{filter:brightness(.98)}}
+.tb-actions{display:flex;align-items:center;gap:8px}
+.btn-mute{width:32px;height:32px;border-radius:50%;border:1px solid var(--rim2);background:var(--card);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.countdown-ov{position:fixed;inset:0;background:rgba(15,23,42,.88);z-index:10000;display:none;align-items:center;justify-content:center;flex-direction:column}
+.countdown-ov.on{display:flex}
+.cd-num{font-family:"Syne",sans-serif;font-size:clamp(80px,25vw,120px);font-weight:800;color:#fff;animation:pop .5s cubic-bezier(.175,.885,.32,1.275)}
+.cd-lbl{font-size:14px;color:rgba(255,255,255,.5);margin-top:8px;font-weight:600}
+.qr-box{text-align:center;background:var(--card);border:1px solid var(--rim2);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.qr-box img{width:140px;height:140px;border-radius:8px}
+.qr-box p{font-size:11px;color:var(--text2);margin-top:8px}
+.hist-item{background:var(--card);border:1px solid var(--rim);border-radius:var(--rs);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hist-item span{font-size:12px;font-weight:600;flex:1}
+.hist-item button{font-size:10px;padding:5px 10px;border-radius:6px;border:1px solid var(--rim2);background:var(--card2);cursor:pointer;font-weight:600}
+.dup-name{color:var(--amber)}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin-bottom:18px;padding:10px 0}
+.pod{flex:1;max-width:100px;text-align:center;animation:rise .4s ease}
+.pod-av{font-size:28px;display:block;margin-bottom:4px}
+.pod-bar{border-radius:var(--rs) var(--rs) 0 0;padding:10px 6px;color:#fff;font-family:"Syne",sans-serif;font-weight:800;font-size:11px}
+.pod-1 .pod-bar{background:linear-gradient(180deg,#FFB020,#D97706);height:90px}
+.pod-2 .pod-bar{background:linear-gradient(180deg,#94A3B8,#64748B);height:65px}
+.pod-3 .pod-bar{background:linear-gradient(180deg,#CD7F32,#A0825A);height:50px}
+.pod-nm{font-size:10px;font-weight:600;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.review-q{background:var(--card);border:1px solid var(--rim);border-radius:var(--rs);padding:12px;margin-bottom:8px;font-size:12px}
+.review-q.ok{border-left:3px solid var(--green)}
+.review-q.no{border-left:3px solid var(--red)}
+.review-q .rq-t{font-weight:700;margin-bottom:6px;line-height:1.4}
+.review-q .rq-a{font-size:11px;color:var(--text2)}
+.session-msg{text-align:center;padding:24px 0;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.session-msg .sm-icon{font-size:48px;margin-bottom:12px}
+.session-msg h2{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;margin-bottom:8px}
+.session-msg p{font-size:13px;color:var(--text2);line-height:1.6;max-width:280px}
+.offline-banner{position:fixed;bottom:0;left:0;right:0;background:var(--red);color:#fff;text-align:center;padding:8px;font-size:12px;font-weight:600;z-index:9997;display:none}
+.offline-banner.on{display:block}
 .q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .q-sess-tag{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);background:var(--bluedim);border:1px solid var(--blueglow);border-radius:99px;padding:4px 11px}
 .q-num{font-size:12px;color:var(--text2);font-weight:600}
@@ -204,8 +246,13 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
 <div class="app">
   <div class="topbar">
     <div class="tb-brand"><div class="tb-dot"></div><div class="tb-name">YHY Consultancy</div></div>
-    <div class="tb-pill" id="tb-pill">ISO 9001:2015</div>
+    <div class="tb-actions">
+      <button class="btn-mute" id="btn-mute" onclick="toggleMute()" title="Sound">🔊</button>
+      <div class="tb-pill" id="tb-pill">ISO 9001:2015</div>
+    </div>
   </div>
+  <div class="offline-banner" id="offline-banner">⚠️ Connection lost — progress is saved</div>
+  <div class="countdown-ov" id="countdown-ov"><div class="cd-num" id="cd-num">3</div><div class="cd-lbl">Get ready!</div></div>
 
   <!-- SPLASH -->
   <div class="scr on" id="s-splash">
@@ -235,7 +282,7 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
     <div style="text-align:center;margin-bottom:28px">
       <div style="font-size:40px;margin-bottom:10px">🔐</div>
       <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:5px">Trainer access</div>
-      <div style="font-size:13px;color:var(--text2)">PIN: 9001 &nbsp;or&nbsp; add ?trainer=9001 to URL</div>
+      <div style="font-size:13px;color:var(--text2)">Enter your trainer PIN to continue</div>
     </div>
     <div class="field"><label>PIN</label><input id="inp-pin" type="password" placeholder="••••" maxlength="6" autocomplete="off" onkeydown="if(event.key==='Enter')checkPin()"/></div>
     <button class="btn btn-blue" onclick="checkPin()">Open dashboard</button>
@@ -252,6 +299,17 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
     </div>
     <div class="seclbl" style="margin-top:8px">Players in the room</div>
     <div class="mosaic" id="w-players"><div class="empty"><span>👀</span>No one yet</div></div>
+    <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px" id="w-hint">Waiting for trainer to start…</p>
+  </div>
+
+  <!-- SESSION ENDED -->
+  <div class="scr" id="s-session-ended">
+    <div class="session-msg">
+      <div class="sm-icon">⏸️</div>
+      <h2 id="se-title">Session ended</h2>
+      <p id="se-msg">This quiz session has ended. Please wait for your trainer to start a new session.</p>
+      <button class="btn btn-blue" style="margin-top:20px;max-width:280px" onclick="playAgain()">Back to home</button>
+    </div>
   </div>
 
   <!-- ADMIN -->
@@ -260,6 +318,7 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
       <div class="admin-title">Dashboard</div>
       <div style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--reddim);color:var(--red);border:1px solid rgba(220,38,38,.25);letter-spacing:.5px;text-transform:uppercase">Admin</div>
     </div>
+    <div class="field"><label>Session label (optional)</label><input id="a-session-label" type="text" placeholder="e.g. Batch 12 March 2026" maxlength="60" autocomplete="off"/></div>
     <div class="start-banner">
       <p><strong id="start-count">0</strong> player(s) waiting</p>
       <button class="btn-start" onclick="adminStart()">Start game →</button>
@@ -275,6 +334,8 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
       <div class="stat-box"><span class="n" id="a-avgp">—</span><div class="l">Avg %</div></div>
     </div>
     <div class="divider"></div>
+    <div class="sec-lbl">QR code — scan to join</div>
+    <div class="qr-box"><img id="a-qr" alt="QR code" src=""/><p>Scan with phone camera</p></div>
     <div class="sec-lbl">Player link — share this</div>
     <div class="link-card" onclick="copyLink('player')"><div class="link-url" id="a-lnk-p">—</div><div class="link-cta">Copy</div></div>
     <div class="sec-lbl">Admin link — keep private</div>
@@ -283,7 +344,10 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
     <div class="sec-lbl">Live leaderboard</div>
     <div id="a-lb"><div class="empty"><span>⏳</span>Waiting for players...</div></div>
     <div class="divider"></div>
-    <button class="ex-btn" onclick="exportCSV()">📊 Export results as CSV</button>
+    <div class="sec-lbl">Past sessions</div>
+    <div id="a-history"><div class="empty"><span>📁</span>No archived sessions yet</div></div>
+    <div class="divider"></div>
+    <button class="ex-btn" onclick="exportCSV()">📊 Export current session (CSV)</button>
     <button class="ex-btn" onclick="exportHTML()">📋 Export leaderboard (printable)</button>
     <button class="btn btn-ghost" style="color:var(--red);border-color:rgba(220,38,38,.2)" onclick="resetGame()">🗑 Reset session</button>
     <button class="btn btn-ghost" onclick="show('s-splash')">← Home</button>
@@ -309,6 +373,7 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
           <circle class="ring-prog" id="ring" cx="40" cy="40" r="35"/>
         </svg>
         <div class="timer-num" id="timer-num">30</div>
+        <div class="mario-sprite" id="mario-sprite">⭐</div>
       </div>
     </div>
     <div class="q-case" id="q-case" style="display:none"></div>
@@ -331,6 +396,7 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
       <div class="res-lbl" id="r-lbl"></div>
       <div class="grade-badge" id="r-grade"></div>
     </div>
+    <div id="r-podium"></div>
     <div class="bk-grid" id="r-bk"></div>
     <div class="divider"></div>
     <div class="seclbl" style="margin-bottom:11px">Score by session</div>
@@ -342,6 +408,14 @@ body::after{content:"";position:fixed;top:-20%;left:50%;width:500px;height:500px
       <button class="btn btn-ghost" style="margin-top:0" onclick="playAgain()">Play again</button>
       <button class="btn btn-blue" onclick="quickShare()">Share result</button>
     </div>
+    <button class="ex-btn" onclick="showReview()">📖 Review answers</button>
+  </div>
+
+  <!-- REVIEW -->
+  <div class="scr" id="s-review">
+    <div class="admin-hdr"><div class="admin-title">Answer review</div></div>
+    <div id="review-list"></div>
+    <button class="btn btn-ghost" onclick="show('s-result')">← Back to results</button>
   </div>
 </div>
 
@@ -417,12 +491,13 @@ const L3=[
   {s:"Session 5",t:"cs",case:"An organisation implements ISO 9001:2015 and achieves certification. Three years later during recertification, the auditor finds that while all documents are updated, the actual processes on the shop floor do not match the documented procedures, and staff follow their own informal methods.",q:"Which fundamental QMS failure does this represent and which clauses are violated?",o:["Clause 7.5 only — documented information is not controlled","Clauses 4.4, 7.5, and 8.1 — the QMS is documented but not implemented; processes are not controlled as planned","Clause 9.2 — internal audits should have caught this","Clause 5.1 — leadership has not demonstrated commitment"],a:1,e:"This represents a fundamental implementation failure. Clause 4.4 requires processes to be implemented and maintained as planned. Clause 8.1 requires control of planned processes. Clause 7.5 requires documented information to reflect actual practice. Certification based on paper compliance without actual implementation is a systemic failure requiring complete reassessment."}
 ];
 
-let db=null,pRef=null,psRef=null,gRef=null;
-let G={name:"",uid:"",avatar:"",level:1,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:30,sesC:{},sesT:{},isAdmin:false,fbOk:false,questions:[]};
+let db=null,pRef=null,psRef=null,gRef=null,hRef=null;
+const LS_KEY="yhy_quiz_player";
+let G={name:"",uid:"",avatar:"",level:1,sessionId:"",joined:0,cur:0,score:0,streak:0,maxStreak:0,correct:0,wrong:0,timeouts:0,answered:false,tmr:null,timeLeft:30,sesC:{},sesT:{},answers:[],isAdmin:false,fbOk:false,questions:[],muted:false,hurryOn:false,hurryIv:null,_waitG:null,_waitP:null};
+let _ac=null,_hurryLast=0;
 
-let _ac=null;
 function ac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
-function tone(f,d,t="sine",v=.25){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type=t;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start();o.stop(c.currentTime+d)}catch(e){}}
+function tone(f,d,t="sine",v=.25){if(G.muted)return;try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;o.type=t;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start();o.stop(c.currentTime+d)}catch(e){}}
 function sndJoin(){[330,440,550].forEach((f,i)=>setTimeout(()=>tone(f,.09,"square",.18),i*80))}
 function sndCorrect(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.08,"square",.2),i*65))}
 function sndWrong(){tone(200,.11,"sawtooth",.28);setTimeout(()=>tone(155,.18,"sawtooth",.22),120)}
@@ -430,73 +505,187 @@ function sndTimeout(){tone(220,.08,"sawtooth",.2);setTimeout(()=>tone(170,.22,"s
 function sndTick(){tone(900,.038,"square",.055)}
 function sndStreak(){[880,1047,1319,1760].forEach((f,i)=>setTimeout(()=>tone(f,.07,"square",.17),i*55))}
 function sndStart(){[261,329,392,523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,.09,"square",.2),i*85))}
+function sndHurry(){if(G.muted||Date.now()-_hurryLast<1800)return;_hurryLast=Date.now();[659,784,988,1175].forEach((f,i)=>setTimeout(()=>tone(f,.07,"square",.16),i*90))}
+function toggleMute(){G.muted=!G.muted;document.getElementById("btn-mute").textContent=G.muted?"🔇":"🔊";localStorage.setItem("yhy_quiz_mute",G.muted?"1":"0")}
 
 function initFB(){
   try{
     if(!firebase.apps.length)firebase.initializeApp(FB);
-    db=firebase.database();psRef=db.ref("quiz/players");gRef=db.ref("quiz/game");G.fbOk=true;
+    db=firebase.database();psRef=db.ref("quiz/players");gRef=db.ref("quiz/game");hRef=db.ref("quiz/history");G.fbOk=true;
+    G.muted=localStorage.getItem("yhy_quiz_mute")==="1";
+    document.getElementById("btn-mute").textContent=G.muted?"🔇":"🔊";
   }catch(e){G.fbOk=false}
 }
 function mkUid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function mkSessionId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function saveLocal(){if(G.uid&&G.sessionId)localStorage.setItem(LS_KEY,JSON.stringify({uid:G.uid,sessionId:G.sessionId}))}
+function clearLocal(){localStorage.removeItem(LS_KEY)}
+function loadLocal(){try{return JSON.parse(localStorage.getItem(LS_KEY)||"null")}catch(e){return null}}
+
+function ensureGame(cb){
+  if(!G.fbOk){if(cb)cb(null);return}
+  gRef.transaction(cur=>{
+    if(!cur||!cur.sessionId)return{sessionId:mkSessionId(),started:false,startedAt:null,countdownEnd:null,label:""};
+    if(cur.started&&!cur.startedAt)cur.started=false;
+    return cur;
+  },(err,committed,snap)=>{
+    const g=snap&&snap.val()?snap.val():null;
+    if(g)G.gameSessionId=g.sessionId;
+    if(cb)cb(g);
+  },false);
+}
 
 function buildQ(level){
   const bank=level===1?L1:level===2?L2:L3;
   const pool=shuffle(bank).slice(0,20);
-  return pool.map(q=>{
-    const opts=[...q.o];const correct=opts[q.a];const sh=shuffle(opts);
-    return {...q,o:sh,a:sh.indexOf(correct)};
-  });
+  return pool.map(q=>{const opts=[...q.o];const correct=opts[q.a];const sh=shuffle(opts);return{...q,o:sh,a:sh.indexOf(correct)};});
 }
 function selLevel(n,el){G.level=n;document.querySelectorAll(".lvl-card").forEach(c=>c.classList.remove("active"));el.classList.add("active")}
-function checkUrlAdmin(){const p=new URLSearchParams(window.location.search);if(p.get("trainer")===ADMIN_PIN){G.isAdmin=true;initFB();showAdmin();return true}return false}
+function checkUrlAdmin(){const p=new URLSearchParams(window.location.search);if(p.get("trainer")===ADMIN_PIN){G.isAdmin=true;initFB();ensureGame(()=>showAdmin());return true}return false}
 function show(id){document.querySelectorAll(".scr").forEach(s=>s.classList.remove("on"));document.getElementById(id).classList.add("on");window.scrollTo(0,0)}
+
+function applyPlayer(p,uid){
+  G.uid=uid;G.name=p.name||"";G.avatar=p.avatar||"🧑";G.level=p.level||1;G.sessionId=p.sessionId||"";
+  G.joined=p.joined||0;G.cur=p.cur||0;G.score=p.score||0;G.streak=p.streak||0;G.maxStreak=p.maxStreak||0;
+  G.correct=p.correct||0;G.wrong=p.wrong||0;G.timeouts=p.timeouts||0;G.questions=p.questions||[];
+  G.sesC=p.sesC||{};G.sesT=p.sesT||{};G.answers=p.answers||[];
+  SESS.forEach(s=>{if(G.sesC[s]===undefined)G.sesC[s]=0;if(G.sesT[s]===undefined)G.sesT[s]=0});
+  pRef=psRef.child(uid);saveLocal();
+}
+
+function playerPayload(status,done){
+  return{
+    name:G.name,avatar:G.avatar,level:G.level,sessionId:G.sessionId,status:status||"playing",
+    cur:G.cur,score:G.score,correct:G.correct,wrong:G.wrong,timeouts:G.timeouts,
+    streak:G.streak,maxStreak:G.maxStreak,sesC:G.sesC,sesT:G.sesT,questions:G.questions,
+    answers:G.answers,done:!!done,joined:G.joined||Date.now(),lastSeen:Date.now()
+  };
+}
+
+function savePlayer(done=false){
+  if(!G.fbOk||!pRef)return;
+  const st=done||G.cur>=20?"done":(G.status||"playing");
+  pRef.update(playerPayload(st,done||G.cur>=20));
+}
+
+function setupDisconnect(){
+  if(!pRef)return;
+  pRef.onDisconnect().update({status:"left",lastSeen:firebase.database.ServerValue.TIMESTAMP});
+}
+
+function showSessionEnded(msg){
+  document.getElementById("se-msg").textContent=msg||"This quiz session has ended. Please wait for your trainer to start a new session.";
+  show("s-session-ended");
+}
+
+function tryReconnect(){
+  initFB();if(!G.fbOk)return;
+  const local=loadLocal();if(!local||!local.uid)return;
+  psRef.child(local.uid).once("value",snap=>{
+    const p=snap.val();if(!p){clearLocal();return}
+    applyPlayer(p,local.uid);
+    gRef.once("value",gs=>{
+      const game=gs.val()||{};
+      if(p.sessionId!==game.sessionId){showSessionEnded();return}
+      if(p.status==="done"||p.done){restoreResultView();return}
+      if(p.status==="playing"||p.status==="left"){show("s-quiz");startQuiz(true);return}
+      if(p.status==="waiting"){
+        if(game.started&&p.joined<=game.startedAt){runCountdownThenStart(game.countdownEnd);return}
+        if(game.started&&p.joined>game.startedAt){showSessionEnded("Game already in progress. Wait for trainer to reset session.");return}
+        showWaiting(true);return;
+      }
+      clearLocal();
+    });
+  });
+}
 
 function joinGame(){
   const name=document.getElementById("inp-name").value.trim();
   if(!name){document.getElementById("inp-name").focus();return}
-  ac();sndJoin();
-  G.name=name;G.uid=mkUid();G.avatar=AVATS[~~(Math.random()*AVATS.length)];
-  G.questions=buildQ(G.level);SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
-  initFB();
-  if(G.fbOk){
+  ac();sndJoin();initFB();
+  if(!G.fbOk){G.name=name;G.questions=buildQ(G.level);SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});show("s-quiz");startQuiz();return}
+  ensureGame(game=>{
+    if(!game)return;
+    G.sessionId=game.sessionId;
+    if(game.started){
+      showSessionEnded("Game already in progress. Please wait for your trainer to reset the session.");
+      return;
+    }
+    G.name=name;G.uid=mkUid();G.avatar=AVATS[~~(Math.random()*AVATS.length)];
+    G.joined=Date.now();G.questions=buildQ(G.level);G.answers=[];
+    SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
     pRef=psRef.child(G.uid);
-    pRef.set({name:G.name,avatar:G.avatar,score:0,correct:0,done:false,level:G.level,joined:Date.now()});
-    pRef.onDisconnect().remove();showWaiting();
-  }else{show("s-quiz");startQuiz()}
+    pRef.set(playerPayload("waiting",false)).then(()=>{
+      setupDisconnect();saveLocal();showWaiting(false);
+    });
+  });
 }
 
-function showWaiting(){
+function showWaiting(reconnect){
   show("s-waiting");
   const ln={1:"🌱 Awareness",2:"⚡ Practitioner",3:"🎯 Professional"};
-  document.getElementById("w-greet").textContent="You\'re in, "+G.name+"!";
+  document.getElementById("w-greet").textContent="You're in, "+G.name+"!";
   document.getElementById("w-lvl").textContent="Level: "+ln[G.level];
-  psRef.on("value",snap=>{
-    const d=snap.val()||{},ps=Object.values(d);
+  document.getElementById("w-hint").textContent=reconnect?"Reconnecting… waiting for game sync":"Waiting for trainer to start…";
+  if(G._waitP)psRef.off("value",G._waitP);
+  if(G._waitG)gRef.off("value",G._waitG);
+  G._waitP=snap=>{
+    const d=snap.val()||{},ps=Object.values(d).filter(p=>p.sessionId===G.sessionId);
     document.getElementById("w-count").textContent=ps.length;
     document.getElementById("w-players").innerHTML=ps.length?ps.map(p=>"<div class=\"p-chip\"><span class=\"av\">"+p.avatar+"</span><div class=\"nm\">"+esc(p.name)+"</div></div>").join(""):"<div class=\"empty\"><span>👀</span>No one yet</div>";
-  });
-  gRef.on("value",snap=>{if(snap.val()?.started){psRef.off();gRef.off();show("s-quiz");startQuiz()}});
+  };
+  psRef.on("value",G._waitP);
+  G._waitG=snap=>{
+    const g=snap.val();if(!g||g.sessionId!==G.sessionId||!g.started)return;
+    if(G.joined>g.startedAt){showSessionEnded("Game already started before you joined.");return}
+    psRef.off("value",G._waitP);gRef.off("value",G._waitG);
+    runCountdownThenStart(g.countdownEnd);
+  };
+  gRef.on("value",G._waitG);
+}
+
+function runCountdownThenStart(countdownEnd){
+  const end=countdownEnd||Date.now()+3200;
+  const ov=document.getElementById("countdown-ov"),num=document.getElementById("cd-num");
+  ov.classList.add("on");
+  const tick=()=>{
+    const left=Math.ceil((end-Date.now())/1000);
+    if(left>0){num.textContent=left;sndTick();setTimeout(tick,1000)}
+    else{ov.classList.remove("on");show("s-quiz");startQuiz(true);savePlayer()}
+  };
+  tick();
 }
 
 function showAdminLogin(){show("s-admin-login")}
 function checkPin(){
   const p=document.getElementById("inp-pin").value.trim();
-  if(p===ADMIN_PIN){G.isAdmin=true;initFB();showAdmin()}
+  if(p===ADMIN_PIN){G.isAdmin=true;initFB();ensureGame(()=>showAdmin())}
   else{document.getElementById("inp-pin").value="";document.getElementById("inp-pin").placeholder="Wrong PIN…";sndWrong();setTimeout(()=>{document.getElementById("inp-pin").placeholder="••••"},2000)}
 }
+
+function fmtName(n,counts){return counts[n]>1?esc(n)+' <span class="dup-name">('+counts[n]+")</span>":esc(n)}
+function playerStatusTag(p){
+  if(p.status==="done"||p.done)return'<div class="alb-tag tdone">Done</div>';
+  if(p.status==="left")return'<div class="alb-tag tplay">Left Q'+(p.cur||0)+"/20</div>";
+  if(p.status==="playing")return'<div class="alb-tag tplay">Q'+(Math.min((p.cur||0)+1,20))+"/20</div>";
+  return'<div class="alb-tag tplay">Waiting</div>';
+}
+
 function showAdmin(){
   show("s-admin");
   document.getElementById("tb-pill").textContent="TRAINER";document.getElementById("tb-pill").classList.add("trainer");
   const base=window.location.href.split("?")[0];
   document.getElementById("a-lnk-p").textContent=base;
   document.getElementById("a-lnk-a").textContent=base+"?trainer="+ADMIN_PIN;
-  initFB();
+  document.getElementById("a-qr").src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data="+encodeURIComponent(base);
+  initFB();loadHistory();
   psRef.on("value",snap=>{
     const d=snap.val()||{},ps=Object.values(d);
-    const done=ps.filter(x=>x.done),scores=done.map(x=>x.score||0);
+    const done=ps.filter(x=>x.status==="done"||x.done);
+    const scores=ps.map(x=>x.score||0);
     const avgS=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
-    const avgPct=done.length?Math.round(done.map(x=>(x.correct||0)/20*100).reduce((a,b)=>a+b,0)/done.length):null;
+    const avgPct=ps.length?Math.round(ps.map(x=>(x.correct||0)/20*100).reduce((a,b)=>a+b,0)/ps.length):null;
     const topS=scores.length?Math.max(...scores):null;
     const passR=done.length?Math.round(done.filter(x=>(x.correct||0)/20>=.7).length/done.length*100):null;
     document.getElementById("a-joined").textContent=ps.length;
@@ -505,23 +694,56 @@ function showAdmin(){
     document.getElementById("a-avg").textContent=avgS!==null?avgS:"—";
     document.getElementById("a-top").textContent=topS!==null?topS:"—";
     document.getElementById("a-avgp").textContent=avgPct!==null?avgPct+"%":"—";
-    document.getElementById("start-count").textContent=ps.length;
+    document.getElementById("start-count").textContent=ps.filter(x=>x.status==="waiting").length;
+    const names={};ps.forEach(p=>{names[p.name]=(names[p.name]||0)+1});
     const sorted=ps.sort((a,b)=>(b.score||0)-(a.score||0));
-    document.getElementById("a-lb").innerHTML=sorted.length?sorted.map((p,i)=>"<div class=\"alb-row\"><div class=\"alb-rank "+(i===0?"r1":i===1?"r2":i===2?"r3":"")+"\">" +rs(i)+"</div><div class=\"alb-av\">"+p.avatar+"</div><div class=\"alb-name\">"+esc(p.name)+"</div><div class=\"alb-sc\">⭐"+( p.score||0)+"</div><div class=\"alb-tag "+(p.done?"tdone":"tplay")+"\">"+( p.done?"Done":"Playing")+"</div></div>").join(""):"<div class=\"empty\"><span>⏳</span>Waiting for players...</div>";
+    document.getElementById("a-lb").innerHTML=sorted.length?sorted.map((p,i)=>"<div class=\"alb-row\"><div class=\"alb-rank "+(i===0?"r1":i===1?"r2":i===2?"r3":"")+"\">"+rs(i)+"</div><div class=\"alb-av\">"+p.avatar+"</div><div class=\"alb-name\">"+fmtName(p.name,names)+"</div><div class=\"alb-sc\">⭐"+(p.score||0)+"</div>"+playerStatusTag(p)+"</div>").join(""):"<div class=\"empty\"><span>⏳</span>Waiting for players...</div>";
   });
 }
-function adminStart(){if(!G.fbOk){toast("Firebase not connected");return}gRef.set({started:true,at:Date.now()});toast("🚀 Game started!")}
-function copyLink(t){const b=window.location.href.split("?")[0];navigator.clipboard.writeText(t==="admin"?b+"?trainer="+ADMIN_PIN:b).then(()=>toast(t==="admin"?"🔐 Admin link copied!":"🔗 Player link copied!")).catch(()=>{})}
-function exportCSV(){
+
+function loadHistory(){
+  if(!hRef)return;
+  hRef.limitToLast(8).once("value",snap=>{
+    const d=snap.val()||{};const keys=Object.keys(d).reverse();
+    document.getElementById("a-history").innerHTML=keys.length?keys.map(k=>{
+      const h=d[k];const dt=new Date(h.archivedAt||0).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+      return'<div class="hist-item"><span>'+esc(h.label||k)+' · '+dt+' · '+(h.playerCount||0)+' players</span><button onclick="exportHistoryCSV(\''+k+'\')">CSV</button></div>';
+    }).join(""):'<div class="empty"><span>📁</span>No archived sessions yet</div>';
+  });
+}
+
+function adminStart(){
   if(!G.fbOk){toast("Firebase not connected");return}
-  psRef.once("value",snap=>{
-    const d=snap.val()||{};
-    const rows=[["Name","Score","Correct","Percentage","Grade","Level","Status"]];
-    Object.values(d).forEach(p=>{const pct=Math.round((p.correct||0)/20*100);rows.push([p.name,p.score||0,p.correct||0,pct+"%",getGrade(pct).label,["","Awareness","Practitioner","Professional"][p.level||1],p.done?"Done":"In progress"])});
-    const blob=new Blob([rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n")],{type:"text/csv"});
-    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="YHY_ISO9001_Results.csv";a.click();
+  const label=document.getElementById("a-session-label").value.trim();
+  const now=Date.now();
+  gRef.transaction(cur=>{
+    if(!cur)return null;
+    return{...cur,started:true,startedAt:now,countdownEnd:now+3200,label:label||cur.label||""};
   });
+  toast("🚀 Game starting in 3…2…1!");
 }
+
+function copyLink(t){const b=window.location.href.split("?")[0];navigator.clipboard.writeText(t==="admin"?b+"?trainer="+ADMIN_PIN:b).then(()=>toast(t==="admin"?"🔐 Admin link copied!":"🔗 Player link copied!")).catch(()=>{})}
+
+function rowsFromPlayers(d){
+  const rows=[["Name","Score","Correct","Percentage","Grade","Level","Status","Progress"]];
+  Object.values(d).forEach(p=>{
+    const pct=Math.round((p.correct||0)/20*100);
+    const prog=p.status==="done"||p.done?"20/20":(p.cur||0)+"/20";
+    const st=p.status==="done"||p.done?"Done":p.status==="left"?"Left early":p.status==="playing"?"In progress":"Waiting";
+    rows.push([p.name,p.score||0,p.correct||0,pct+"%",getGrade(pct).label,["","Awareness","Practitioner","Professional"][p.level||1],st,prog]);
+  });
+  return rows;
+}
+
+function downloadCSV(rows,name){
+  const blob=new Blob([rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n")],{type:"text/csv"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();
+}
+
+function exportCSV(){if(!G.fbOk){toast("Firebase not connected");return}psRef.once("value",snap=>{downloadCSV(rowsFromPlayers(snap.val()||{}),"YHY_ISO9001_Results.csv")})}
+function exportHistoryCSV(sid){if(!hRef)return;hRef.child(sid).once("value",snap=>{const h=snap.val();if(!h||!h.players){toast("No data");return}downloadCSV(rowsFromPlayers(h.players),"YHY_"+sid+"_Results.csv")})}
+
 function exportHTML(){
   if(!G.fbOk){toast("Firebase not connected");return}
   psRef.once("value",snap=>{
@@ -531,55 +753,95 @@ function exportHTML(){
     const a=document.createElement("a");a.href="data:text/html;charset=utf-8,"+encodeURIComponent(html);a.download="YHY_Leaderboard.html";a.click();
   });
 }
-function resetGame(){if(!confirm("Reset entire session?"))return;db.ref("quiz").remove();document.getElementById("a-lb").innerHTML="<div class=\"empty\"><span>⏳</span>Waiting...</div>";toast("Session reset")}
 
-function startQuiz(){
-  sndStart();
-  G.cur=0;G.score=0;G.streak=0;G.maxStreak=0;G.correct=0;G.wrong=0;G.timeouts=0;G.answered=false;
-  SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});
-  if(!G.questions.length)G.questions=buildQ(G.level);
-  renderQ();if(G.fbOk)listenLB();
+function resetGame(){
+  if(!confirm("Reset session? Current player data will be archived."))return;
+  gRef.once("value",gs=>{
+    const game=gs.val()||{};const sid=game.sessionId;
+    psRef.once("value",ps=>{
+      const players=ps.val();const label=document.getElementById("a-session-label").value.trim()||game.label||("Session "+new Date().toLocaleDateString("en-GB"));
+      const archive=()=>{
+        const newSid=mkSessionId();
+        psRef.remove().then(()=>gRef.set({sessionId:newSid,started:false,startedAt:null,countdownEnd:null,label:""}));
+        document.getElementById("a-session-label").value="";
+        document.getElementById("a-lb").innerHTML='<div class="empty"><span>⏳</span>Waiting...</div>';
+        loadHistory();toast("Session archived & reset");
+      };
+      if(players&&sid)hRef.child(sid).set({archivedAt:Date.now(),label,playerCount:Object.keys(players).length,players}).then(archive);
+      else archive();
+    });
+  });
 }
+
+function startQuiz(resume){
+  if(!resume){sndStart();G.cur=0;G.score=0;G.streak=0;G.maxStreak=0;G.correct=0;G.wrong=0;G.timeouts=0;G.answered=false;G.answers=[];SESS.forEach(s=>{G.sesC[s]=0;G.sesT[s]=0});if(!G.questions.length)G.questions=buildQ(G.level)}
+  else{if(!G.questions.length){toast("Could not restore — starting fresh");G.questions=buildQ(G.level)}toast("▶ Resumed at Q"+(G.cur+1))}
+  if(pRef)setupDisconnect();
+  renderQ();if(G.fbOk){listenLB();savePlayer()}
+}
+
+function setMarioHurry(on){
+  const tc=document.querySelector(".timer-container"),tn=document.getElementById("timer-num"),sp=document.getElementById("mario-sprite");
+  if(on&&!G.hurryOn){G.hurryOn=true;tc.classList.add("mario-hurry");tn.classList.add("mario-hurry");sp.classList.add("on");document.body.classList.add("hurry-vignette");sndHurry();G.hurryIv=setInterval(sndHurry,2000)}
+  if(!on&&G.hurryOn){G.hurryOn=false;tc.classList.remove("mario-hurry");tn.classList.remove("mario-hurry");sp.classList.remove("on");document.body.classList.remove("hurry-vignette");clearInterval(G.hurryIv);G.hurryIv=null}
+}
+
 function renderQ(){
   const q=G.questions[G.cur];G.answered=false;G.sesT[q.s]=(G.sesT[q.s]||0)+1;
   document.getElementById("h-player").textContent=G.avatar+" "+G.name;
   document.getElementById("h-score").textContent=G.score;
-  const ln={1:"Awareness",2:"Practitioner",3:"Professional"};
-  const lc={1:"leasy",2:"lmed",3:"lhard"};
+  const ln={1:"Awareness",2:"Practitioner",3:"Professional"},lc={1:"leasy",2:"lmed",3:"lhard"};
   const hl=document.getElementById("h-lvl");hl.textContent=ln[G.level];hl.className="hud-lvl "+lc[G.level];
   document.getElementById("q-sess").textContent=q.s;
   document.getElementById("q-num").textContent="Q "+(G.cur+1)+" / 20";
   document.getElementById("prog-fill").style.width=(G.cur/20*100)+"%";
   const tt=document.getElementById("q-type-tag");
-  if(q.t==="cs"){tt.textContent="📋 Case study";tt.className="q-type-tag qtcs"}
-  else{tt.textContent="❓ Multiple choice";tt.className="q-type-tag qtmc"}
+  if(q.t==="cs"){tt.textContent="📋 Case study";tt.className="q-type-tag qtcs"}else{tt.textContent="❓ Multiple choice";tt.className="q-type-tag qtmc"}
   const ce=document.getElementById("q-case");
   if(q.case){ce.style.display="block";ce.textContent=q.case}else{ce.style.display="none"}
   document.getElementById("q-text").textContent=q.q;
   const K=["A","B","C","D"];
-  document.getElementById("opts").innerHTML=q.o.map((o,i)=>"<button class=\"opt\" onclick=\"pick("+i+")\" ><div class=\"opt-k\">"+K[i]+"</div><div class=\"opt-t\">"+esc(o)+"</div></button>").join("");
+  document.getElementById("opts").innerHTML=q.o.map((o,i)=>"<button class=\"opt\" onclick=\"pick("+i+")\"><div class=\"opt-k\">"+K[i]+"</div><div class=\"opt-t\">"+esc(o)+"</div></button>").join("");
   document.getElementById("fb").className="fb";document.getElementById("nxt-w").className="nxt-w";
   document.getElementById("btn-nxt").textContent=G.cur+1<20?"Next question →":"See results →";
   document.getElementById("lb-sect").style.display="none";
-  setRing(30,false);startTmr();
+  setMarioHurry(false);setRing(30,false);startTmr();
 }
+
 function startTmr(){
   G.timeLeft=30;clearInterval(G.tmr);
-  G.tmr=setInterval(()=>{G.timeLeft--;setRing(G.timeLeft,G.timeLeft<=8);document.getElementById("timer-num").textContent=G.timeLeft;if(G.timeLeft<=5&&G.timeLeft>0)sndTick();if(G.timeLeft<=0){clearInterval(G.tmr);autoEnd()}},1000);
+  G.tmr=setInterval(()=>{
+    G.timeLeft--;
+    const urgent=G.timeLeft<=8;
+    setRing(G.timeLeft,urgent);
+    document.getElementById("timer-num").textContent=G.timeLeft;
+    if(urgent){setMarioHurry(true);if(G.timeLeft<=5&&G.timeLeft>0&&!G.muted)sndTick()}
+    else if(G.timeLeft<=5&&G.timeLeft>0)sndTick();
+    if(G.timeLeft<=0){clearInterval(G.tmr);setMarioHurry(false);autoEnd()}
+  },1000);
 }
+
 function setRing(t,urgent){
   const r=document.getElementById("ring");r.style.strokeDashoffset=219.9-(t/30)*219.9;r.className="ring-prog"+(urgent?" urgent":"");
-  const n=document.getElementById("timer-num");n.className="timer-num"+(urgent?" urgent":"");
+  const n=document.getElementById("timer-num");n.className="timer-num"+(urgent?" urgent mario-hurry":"");
 }
+
+function recordAnswer(pick,ok){
+  const q=G.questions[G.cur];
+  G.answers.push({qi:G.cur,pick,correct:q.a,ok:ok===true});
+}
+
 function autoEnd(){
-  if(G.answered)return;G.answered=true;G.timeouts++;G.streak=0;sndTimeout();
+  if(G.answered)return;G.answered=true;G.timeouts++;G.streak=0;sndTimeout();setMarioHurry(false);
   const q=G.questions[G.cur];
   document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
   document.querySelectorAll(".opt")[q.a].classList.add("reveal");
-  setFb(false,"⏰ Time\'s up! "+q.e);showNxt();
+  recordAnswer(-1,false);
+  setFb(false,"⏰ Time's up! "+q.e);showNxt();savePlayer();
 }
+
 function pick(i){
-  if(G.answered)return;clearInterval(G.tmr);G.answered=true;
+  if(G.answered)return;clearInterval(G.tmr);G.answered=true;setMarioHurry(false);
   const q=G.questions[G.cur],btns=document.querySelectorAll(".opt");
   btns.forEach(b=>b.disabled=true);
   if(i===q.a){
@@ -587,12 +849,13 @@ function pick(i){
     const tb=Math.round((G.timeLeft/30)*50);
     G.score+=100+tb;G.correct++;G.streak++;G.sesC[q.s]=(G.sesC[q.s]||0)+1;
     if(G.streak>G.maxStreak)G.maxStreak=G.streak;
-    sndCorrect();if(G.streak>=3)streakFx();setFb(true,"✅ Correct! "+q.e);
+    sndCorrect();if(G.streak>=3)streakFx();setFb(true,"✅ Correct! "+q.e);recordAnswer(i,true);
   }else{
-    btns[i].classList.add("wrong");btns[q.a].classList.add("reveal");G.wrong++;G.streak=0;sndWrong();setFb(false,"❌ "+q.e);
+    btns[i].classList.add("wrong");btns[q.a].classList.add("reveal");G.wrong++;G.streak=0;sndWrong();setFb(false,"❌ "+q.e);recordAnswer(i,false);
   }
-  document.getElementById("h-score").textContent=G.score;push();showNxt();
+  document.getElementById("h-score").textContent=G.score;savePlayer();showNxt();
 }
+
 function setFb(ok,txt){const el=document.getElementById("fb");el.textContent=txt;el.className="fb on "+(ok?"ok":"no")}
 function showNxt(){document.getElementById("nxt-w").className="nxt-w on";document.getElementById("lb-sect").style.display="block"}
 function nextQ(){G.cur++;G.cur>=20?showResult():renderQ()}
@@ -603,7 +866,7 @@ function getGrade(pct){
   if(pct>=70)return{label:"Pass",emoji:"✅",cls:"gpass",color:"#059669"};
   return{label:"Not passed",emoji:"📚",cls:"gfail",color:"#DC2626"};
 }
-function push(done=false){if(!G.fbOk||!pRef)return;pRef.update({score:G.score,correct:G.correct,done,name:G.name,avatar:G.avatar,level:G.level})}
+
 function listenLB(){
   psRef.on("value",snap=>{
     const d=snap.val()||{};
@@ -613,8 +876,23 @@ function listenLB(){
     document.getElementById("live-lb").innerHTML=sorted.map((p,i)=>"<div class=\"lb-row"+(p.uid===G.uid?" me":"")+"\"><div class=\"lb-rank\">"+rs(i)+"</div><div class=\"lb-av\">"+p.avatar+"</div><div class=\"lb-name\">"+esc(p.name)+(p.uid===G.uid?" <span style=\"color:var(--blue);font-size:10px\">(you)</span>":"")+"</div><div class=\"lb-bar-track\"><div class=\"lb-bar-fill\" style=\"width:"+Math.round((p.score||0)/max*100)+"%\"></div></div><div class=\"lb-pts\">⭐"+(p.score||0)+"</div></div>").join("");
   });
 }
-function showResult(){
-  clearInterval(G.tmr);push(true);if(G.fbOk)psRef.off();
+
+function renderPodium(sorted){
+  const top=sorted.filter(p=>p.status==="done"||p.done||(p.correct||0)>0).slice(0,3);
+  if(top.length<2){document.getElementById("r-podium").innerHTML="";return}
+  const order=top.length>=3?[top[1],top[0],top[2]]:[top[1],top[0]];
+  document.getElementById("r-podium").innerHTML='<div class="podium">'+order.map((p,i)=>{
+    const rank=top.indexOf(p)+1;
+    return'<div class="pod pod-'+rank+'"><span class="pod-av">'+p.avatar+'</span><div class="pod-bar">'+rs(rank-1)+'<br>'+(p.score||0)+'</div><div class="pod-nm">'+esc(p.name)+'</div></div>';
+  }).join("")+"</div>";
+}
+
+function restoreResultView(){showResult(true)}
+
+function showResult(restore){
+  clearInterval(G.tmr);setMarioHurry(false);
+  if(!restore)savePlayer(true);
+  if(G.fbOk&&G._waitP)psRef.off("value",G._waitP);
   const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
   const avM={100:"💎",90:"🏆",80:"🥇",70:"✅",60:"🥈",50:"🥉",0:"📚"};
   let av="📚";for(const k of[100,90,80,70,60,50,0])if(pct>=k){av=avM[k];break}
@@ -628,14 +906,27 @@ function showResult(){
   const lName=["","Awareness","Practitioner","Professional"][G.level];
   const dt=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
   document.getElementById("cert-wrap").innerHTML=pct>=70?"<div class=\"cert-card\"><div class=\"cert-label\">Certificate of Completion</div><div class=\"cert-name\">"+esc(G.name)+"</div><div class=\"cert-course\">ISO 9001:2015 "+lName+" · YHY Consultancy</div><div class=\"cert-score\">"+grade.emoji+" "+grade.label+" · "+pct+"% · "+dt+"</div><div class=\"cert-btns\"><button class=\"cert-btn cbdl\" onclick=\"dlCert()\">⬇ Download</button><button class=\"cert-btn cbsh\" onclick=\"shareCert()\">📤 Share</button></div></div>":"<div style=\"background:var(--reddim);border:1px solid rgba(220,38,38,.2);border-radius:var(--r);padding:14px 16px;text-align:center;margin-bottom:14px;font-size:13px;color:var(--red)\">Score 70% or above to unlock your certificate. You scored "+pct+"% — try again! 💪</div>";
-  show("s-result");if(pct>=70)fireConfetti();
+  show("s-result");if(pct>=70&&!restore)fireConfetti();
   if(G.fbOk){
     psRef.once("value",snap=>{
       const d=snap.val()||{};const sorted=Object.values(d).sort((a,b)=>(b.score||0)-(a.score||0));const max=sorted[0]?.score||1;
+      renderPodium(sorted);
       document.getElementById("r-lb").innerHTML=sorted.map((p,i)=>"<div class=\"lb-row"+(p.name===G.name&&p.avatar===G.avatar?" me":"")+"\"><div class=\"lb-rank\">"+rs(i)+"</div><div class=\"lb-av\">"+p.avatar+"</div><div class=\"lb-name\">"+esc(p.name)+"</div><div class=\"lb-bar-track\"><div class=\"lb-bar-fill\" style=\"width:"+Math.round((p.score||0)/max*100)+"%\"></div></div><div class=\"lb-pts\">⭐"+(p.score||0)+" · "+Math.round((p.correct||0)/20*100)+"%</div></div>").join("")||"<div class=\"empty\"><span>📡</span>No scores yet</div>";
     });
   }
 }
+
+function showReview(){
+  const K=["A","B","C","D"];
+  document.getElementById("review-list").innerHTML=G.questions.map((q,i)=>{
+    const a=G.answers[i];const ok=a&&a.ok;
+    const pickTxt=a?(a.pick>=0?K[a.pick]+". "+q.o[a.pick]:"No answer (timeout)"):"—";
+    const corr=K[q.a]+". "+q.o[q.a];
+    return'<div class="review-q '+(ok?"ok":"no")+'"><div class="rq-t">Q'+(i+1)+". "+esc(q.q)+'</div><div class="rq-a">Your answer: '+esc(pickTxt)+'<br>Correct: '+esc(corr)+'</div></div>';
+  }).join("");
+  show("s-review");
+}
+
 function dlCert(){
   const pct=Math.round(G.correct/20*100),grade=getGrade(pct);
   const lName=["","Awareness","Practitioner","Professional"][G.level];
@@ -675,8 +966,13 @@ function fireConfetti(){
   for(let i=0;i<100;i++){const p=document.createElement("div");p.className="cp";p.style.cssText="left:"+Math.random()*100+"%;background:"+cols[~~(Math.random()*cols.length)]+";width:"+(4+Math.random()*8)+"px;height:"+(4+Math.random()*8)+"px;border-radius:"+(Math.random()>.5?"50%":"2px")+";animation-duration:"+(2+Math.random()*2.5)+"s;animation-delay:"+Math.random()*1.5+"s";c.appendChild(p)}
   setTimeout(()=>c.innerHTML="",5500);
 }
-function playAgain(){location.href=window.location.href.split("?")[0]}
-window.addEventListener("load",()=>{if(!checkUrlAdmin()){}});
+function playAgain(){clearLocal();location.href=window.location.href.split("?")[0]}
+window.addEventListener("beforeunload",e=>{
+  if(G.cur>0&&G.cur<20&&G.status!=="done"){e.preventDefault();e.returnValue="Your quiz progress is saved. Leave anyway?"}
+});
+window.addEventListener("online",()=>document.getElementById("offline-banner").classList.remove("on"));
+window.addEventListener("offline",()=>document.getElementById("offline-banner").classList.add("on"));
+window.addEventListener("load",()=>{if(!checkUrlAdmin())tryReconnect()});
 </script>
 </body>
 </html>
